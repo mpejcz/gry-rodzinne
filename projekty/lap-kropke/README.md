@@ -2,6 +2,10 @@
 
 Najprostszy projekt startowy: mobilna gra zręcznościowa działająca jako statyczna strona internetowa.
 
+## Zagraj online
+
+Publiczna wersja: <https://mpejcz.github.io/gry-rodzinne/>
+
 ## Cel MVP
 
 Gracz ma 20 sekund na dotknięcie jak największej liczby pojawiających się celów. Gra pokazuje wynik, zapamiętuje rekord na urządzeniu i pozwala rozpocząć kolejną rundę.

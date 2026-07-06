@@ -10,7 +10,7 @@
 - [x] zakończenie i restart;
 - [x] rekord zapisany lokalnie;
 - [x] przycisk udostępniania linku;
-- [ ] publikacja pod publicznym adresem.
+- [x] publikacja pod publicznym adresem.
 
 ## Pomysły po MVP
 

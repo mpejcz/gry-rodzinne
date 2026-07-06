@@ -76,4 +76,5 @@ Osobne repozytorium dla konkretnej gry warto utworzyć dopiero wtedy, gdy:
 
 ## Rozpoczęte projekty
 
-- [Łap kropkę](./projekty/lap-kropke/README.md) — prosta mobilna gra zręcznościowa przygotowana do publikacji jako strona internetowa.
+- [Łap kropkę](./projekty/lap-kropke/README.md) — prosta mobilna gra zręcznościowa.
+  [Zagraj online](https://mpejcz.github.io/gry-rodzinne/).
