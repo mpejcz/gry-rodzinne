@@ -1,0 +1,190 @@
+POMYSŁY NA RODZINNE PROJEKTY
+
+Trudność: 1–10
+
+Format: NR | POMYSŁ | TRUDNOŚĆ
+
+⭐ PIERWSZE POMYSŁY
+
+01 | Spadające klocki | 6/10
+   ↳ Obracaj i układaj klocki, aby usuwać pełne rzędy i zdobywać punkty.
+02 | Sudoku | 5/10
+   ↳ Uzupełnij planszę 9×9 bez powtarzania cyfr w rzędach, kolumnach i polach.
+03 | Cyfrowa kolorowanka | 4/10
+   ↳ Koloruj obrazki pędzlem, cofaj ruchy i zapisuj gotowe prace.
+04 | Nakładki na zdjęcia | 5/10
+   ↳ Dodawaj do zdjęć naklejki, tekst i efekty, a następnie zapisuj wynik.
+    | Rozszerzenie: nakładki AR na twarz | 8/10
+   ↳ Okulary, maski i inne elementy automatycznie podążają za twarzą z kamery.
+
+🧩 GRY LOGICZNE I PLANSZOWE
+
+05 | 2048 z własnymi symbolami | 3/10
+   ↳ Przesuwaj kafelki i łącz identyczne symbole w coraz silniejsze elementy.
+06 | Mastermind – odgadywanie kodu | 3/10
+   ↳ Odkryj ukryty kod dzięki podpowiedziom o poprawnych kolorach i pozycjach.
+07 | Saper | 5/10
+   ↳ Odkrywaj bezpieczne pola, wykorzystując liczby wskazujące sąsiednie miny.
+08 | Puzzle przesuwane | 3/10
+   ↳ Przesuwaj fragmenty obrazka na puste miejsce, aż odtworzysz całość.
+09 | Nonogram | 5/10
+   ↳ Zamaluj właściwe pola według liczbowych wskazówek i odkryj ukryty obrazek.
+10 | Łączenie rur | 4/10
+   ↳ Obracaj kafelki z rurami, aby połączyć źródło z celem.
+11 | Gra słowna na pięć prób | 3/10
+   ↳ Odgadnij ukryte słowo, korzystając z kolorowych informacji o literach.
+12 | Kółko i krzyżyk z wariantami | 2/10
+   ↳ Klasyczny pojedynek wzbogacony większą planszą lub specjalnymi polami.
+13 | Warcaby mini | 6/10
+   ↳ Przesuwaj pionki, zbijaj przeciwnika i dotrzyj do końca planszy.
+14 | Gra pamięciowa – pary kart | 2/10
+   ↳ Odkrywaj po dwie karty i zapamiętuj ich położenie, aby znaleźć wszystkie pary.
+
+🎮 GRY ZRĘCZNOŚCIOWE I AKCJI
+
+15 | Pong z własnymi zasadami | 2/10
+   ↳ Odbijaj piłkę paletką i zdobywaj punkty, dodając własne bonusy i przeszkody.
+16 | Snake | 3/10
+   ↳ Zbieraj jedzenie, wydłużaj węża i unikaj zderzenia z jego ogonem.
+17 | Labirynt z kluczami | 3/10
+   ↳ Znajdź klucze, omiń pułapki i otwórz wyjście z labiryntu.
+18 | Gra zbieracka na czas | 2/10
+   ↳ Zbierz jak najwięcej przedmiotów, zanim skończy się czas.
+19 | Breakout – niszczenie cegieł | 4/10
+   ↳ Odbijaj piłkę paletką i rozbij wszystkie cegły na planszy.
+20 | Endless runner | 4/10
+   ↳ Biegnij coraz szybciej, przeskakując generowane przeszkody.
+21 | Lokalny pojedynek dla 2 osób | 5/10
+   ↳ Dwie osoby rywalizują na jednej klawiaturze w walce lub zbieraniu punktów.
+22 | Gra rytmiczna | 6/10
+   ↳ Naciskaj właściwe klawisze w rytm muzyki i buduj serię trafień.
+23 | Mini-tower defense | 7/10
+   ↳ Ustawiaj wieże i zatrzymuj kolejne fale przeciwników idących wyznaczoną trasą.
+24 | Mini-roguelike | 8/10
+   ↳ Eksploruj losowe pokoje, zbieraj wyposażenie i spróbuj dojść jak najdalej.
+25 | Gra skradankowa 2D | 7/10
+   ↳ Przemknij obok strażników, unikając ich pola widzenia i alarmów.
+26 | Konstrukcje i zagadki fizyczne | 7/10
+   ↳ Ustaw elementy mechanizmu tak, aby piłka lub pojazd dotarły do celu.
+
+🎨 HISTORIE, GRAFIKA I MUZYKA
+
+27 | Interaktywny komiks | 3/10
+   ↳ Podejmuj decyzje między scenami i odkrywaj różne zakończenia opowieści.
+28 | Escape room | 5/10
+   ↳ Przeszukuj pokój, łącz przedmioty i rozwiązuj zagadki prowadzące do wyjścia.
+29 | Wirtualne zwierzątko | 6/10
+   ↳ Karm, baw się i opiekuj stworzeniem, którego potrzeby zmieniają się z czasem.
+30 | Ubieranka postaci | 3/10
+   ↳ Twórz wygląd bohatera, nakładając ubrania, fryzury i dodatki.
+31 | Generator sztuki | 3/10
+   ↳ Steruj kolorami i figurami, aby program tworzył niepowtarzalne obrazy.
+32 | Edytor pixel art | 5/10
+   ↳ Rysuj na siatce pikseli własne postacie, przedmioty i animacje do gier.
+33 | Sekwencer muzyczny | 5/10
+   ↳ Układaj dźwięki na osi czasu i twórz zapętlone rytmy oraz melodie.
+34 | Studio efektów dźwiękowych | 5/10
+   ↳ Nagrywaj i przekształcaj dźwięki na odgłosy skoków, laserów lub potworów.
+35 | Kreator animowanych kartek | 4/10
+   ↳ Łącz tekst, obrazki, muzykę i ruch w interaktywne kartki okolicznościowe.
+36 | Kreator poziomów do gry | 7/10
+   ↳ Buduj mapy z kafelków i natychmiast testuj je sterowaną postacią.
+
+🏗️ SYMULACJE I ZARZĄDZANIE
+
+37 | Symulator sklepu | 6/10
+   ↳ Kupuj towary, ustalaj ceny i próbuj zakończyć dzień z zyskiem.
+38 | Restauracja na czas | 6/10
+   ↳ Przyjmuj zamówienia i przygotowuj potrawy, zanim klienci stracą cierpliwość.
+39 | Hodowla ogrodu | 5/10
+   ↳ Sadź, podlewaj i zbieraj rośliny rozwijające się wraz z upływem czasu.
+40 | Mini-ekosystem | 6/10
+   ↳ Obserwuj, jak rośliny, roślinożercy i drapieżniki wpływają na swoje populacje.
+41 | Kolonia mrówek | 8/10
+   ↳ Mrówki samodzielnie szukają jedzenia, zostawiają ślady i rozwijają gniazdo.
+42 | Karciana walka | 7/10
+   ↳ Buduj małą talię i zagrywaj karty ataków, obrony oraz efektów specjalnych.
+43 | Menedżer drużyny | 6/10
+   ↳ Dobieraj skład i taktykę, a potem obserwuj symulowany wynik meczu.
+44 | Cyfrowy pomocnik do planszówki | 4/10
+   ↳ Aplikacja prowadzi rundy, losuje wydarzenia i automatycznie liczy punkty.
+
+📷 KAMERA, RUCH I PROJEKTY FIZYCZNE
+
+45 | Łapanie obiektów ruchem głowy | 7/10
+   ↳ Poruszaj głową przed kamerą, aby sterować koszykiem i łapać przedmioty.
+46 | Taniec z wykrywaniem pozy | 8/10
+   ↳ Powtarzaj pokazywane pozy, a kamera ocenia podobieństwo ruchu.
+47 | Fotobudka AR | 8/10
+   ↳ Rób zdjęcia z animowanymi maskami i dodatkami śledzącymi twarz.
+48 | Gra refleksowa na micro:bit | 5/10
+   ↳ Naciśnij przycisk jak najszybciej po losowym sygnale i porównaj czasy.
+49 | Własny fizyczny kontroler | 7/10
+   ↳ Zbuduj przyciski lub czujniki, które sterują postacią w prostej grze.
+50 | Domowe poszukiwanie skarbu z QR | 4/10
+   ↳ Skanuj kody ukryte w domu, rozwiązuj zagadki i odblokowuj kolejne wskazówki.
+51 | Studio animacji poklatkowej | 5/10
+   ↳ Rób serię zdjęć figurek lub rysunków i odtwarzaj je jako animację.
+52 | Rodzinny automat arcade | 7/10
+   ↳ Zbierz ukończone minigry w jedno menu obsługiwane klawiaturą lub kontrolerem.
+
+Uwaga: rodzinny automat arcade warto zrobić po stworzeniu kilku minigier.
+
+📚 QUIZY, NAUKA I NARZĘDZIA
+
+53 | Quiz rodzinny | 4/10
+   ↳ Odpowiadaj na stworzone wspólnie pytania i porównuj wyniki graczy.
+54 | Quiz z własnym edytorem pytań | 6/10
+   ↳ Najpierw twórz zestawy pytań, a później rozgrywaj je bez zmieniania kodu.
+55 | Nauka słówek i fiszki | 4/10
+   ↳ Ćwicz słowa, a program częściej pokazuje te, które sprawiają trudność.
+56 | Matematyczny boss | 4/10
+   ↳ Poprawne odpowiedzi zadają obrażenia potworowi, a błędy wzmacniają przeciwnika.
+57 | Programowalny robot na planszy | 5/10
+   ↳ Układaj sekwencję komend, która przeprowadzi robota przez przeszkody do celu.
+58 | Generator przygód | 3/10
+   ↳ Losuj bohatera, miejsce, problem i zwrot akcji jako początek własnej historii.
+59 | Mapa rodzinnych historii | 5/10
+   ↳ Klikaj miejsca na mapie, aby odkrywać rodzinne zdjęcia i krótkie wspomnienia.
+60 | Projektant własnej gry karcianej | 6/10
+   ↳ Projektuj karty, ich statystyki i efekty, a następnie przygotuj talię do druku.
+
+🛠️ INNE ŚCIEŻKI
+
+61 | Modyfikacja gotowej gry | 2/10
+   ↳ Zmień grafikę, poziom i jedną ważną zasadę w istniejącym prostym projekcie.
+62 | Rodzinny game jam | 4/10
+   ↳ W krótkim terminie stwórzcie mikrogrę na wspólnie wylosowany temat.
+63 | Papierowa gra planszowa | 2/10
+   ↳ Zaprojektuj zasady, planszę i karty, a potem szybko przetestuj je na papierze.
+64 | Cyfrowa wersja planszówki | 6/10
+   ↳ Przenieś najważniejszą mechanikę własnej planszówki na ekran komputera.
+65 | Pakiet własnych grafik do gier | 3/10
+   ↳ Przygotuj spójny zestaw postaci, przedmiotów, ikon i teł do przyszłych projektów.
+66 | Pakiet muzyki i efektów | 4/10
+   ↳ Stwórz motyw muzyczny i bibliotekę krótkich dźwięków do jednej gry.
+67 | Dziennik wideo z tworzenia gry | 3/10
+   ↳ Nagrywaj krótkie materiały pokazujące kolejne wersje, problemy i rozwiązania.
+68 | Testowanie i poprawianie cudzej gry | 2/10
+   ↳ Znajdź błędy, oceń zasady i przygotuj listę konkretnych usprawnień.
+69 | Interaktywna opowieść | 3/10
+   ↳ Czytelnik podejmuje decyzje, które zmieniają dalszy przebieg historii.
+70 | Projekt z postacią sterowaną przez AI | 7/10
+   ↳ Bohater reaguje na ograniczony zestaw poleceń lub prowadzi krótkie rozmowy.
+
+GŁOSOWANIE
+
+Każda osoba wybiera maksymalnie 5 numerów i rozdziela między nie 10 punktów.
+
+Przykład:
+17 – 4 pkt
+21 – 3 pkt
+03 – 2 pkt
+53 – 1 pkt
+
+Moje wybory:
+___ – ___ pkt
+___ – ___ pkt
+___ – ___ pkt
+___ – ___ pkt
+___ – ___ pkt
