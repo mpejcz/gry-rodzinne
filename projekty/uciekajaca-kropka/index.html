@@ -6,18 +6,19 @@
     <meta name="theme-color" content="#08111a" />
     <meta
       name="description"
-      content="Łap kropkę — prosta rodzinna gra zręcznościowa działająca na telefonie i komputerze."
+      content="Uciekająca kropka — trudna gra zręcznościowa na telefon i komputer."
     />
-    <title>Łap kropkę!</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Uciekająca kropka — poziom trudny</title>
+    <link rel="stylesheet" href="../lap-kropke/style.css" />
+    <link rel="stylesheet" href="hard.css" />
     <script src="game.js" defer></script>
   </head>
   <body>
     <main class="app-shell">
       <header class="game-header">
-        <p class="eyebrow">Rodzinna minigra 01</p>
-        <h1>Łap kropkę!</h1>
-        <p class="intro">Dotknij kolorowego celu tyle razy, ile zdołasz w 20 sekund.</p>
+        <p class="eyebrow">Poziom trudny</p>
+        <h1>Uciekająca kropka</h1>
+        <p class="intro">Kropka wyczuwa palec lub kursor. Zmuś ją do ucieczki, aż się zmęczy — wtedy ją złap.</p>
       </header>
 
       <section class="stats" aria-label="Wyniki gry">
@@ -35,31 +36,33 @@
         </div>
       </section>
 
-      <section id="arena" class="arena" aria-label="Pole gry">
+      <section id="arena" class="arena hard-arena" aria-label="Pole gry">
         <div class="arena-grid" aria-hidden="true"></div>
 
-        <button id="target" class="target" type="button" aria-label="Złap kropkę" hidden>
+        <button id="target" class="target fleeing-target" type="button" aria-label="Złap kropkę" hidden>
           <span aria-hidden="true"></span>
         </button>
+
+        <p id="gameStatus" class="game-status" aria-live="polite"></p>
 
         <div id="overlay" class="overlay">
           <div class="overlay-card">
             <div class="target-preview" aria-hidden="true"></div>
-            <h2 id="overlayTitle">Gotowi?</h2>
-            <p id="overlayText">Cel będzie zmieniał położenie po każdym trafieniu.</p>
+            <h2 id="overlayTitle">Dasz radę ją złapać?</h2>
+            <p id="overlayText">Dotknij blisko kropki. Po dwóch unikach kropka na chwilę się zmęczy.</p>
             <button id="startButton" class="primary-button" type="button">Start</button>
           </div>
         </div>
       </section>
 
       <section class="actions" aria-label="Dodatkowe działania">
-        <a class="secondary-button mode-link" href="../uciekajaca-kropka/">Poziom trudny</a>
+        <a class="secondary-button mode-link" href="../lap-kropke/">Poziom łatwy</a>
         <button id="shareButton" class="secondary-button" type="button">Udostępnij grę</button>
         <p id="shareStatus" class="share-status" aria-live="polite"></p>
       </section>
 
       <footer>
-        <p>Na komputerze możesz używać również klawiszy <kbd>Tab</kbd> i <kbd>Enter</kbd>.</p>
+        <p>Telefon wykrywa palec po dotknięciu ekranu. Mysz i rysik mogą być wykrywane wcześniej.</p>
       </footer>
     </main>
   </body>

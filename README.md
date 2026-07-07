@@ -78,3 +78,4 @@ Osobne repozytorium dla konkretnej gry warto utworzyć dopiero wtedy, gdy:
 
 - [Łap kropkę](./projekty/lap-kropke/README.md) — prosta mobilna gra zręcznościowa.
   [Zagraj online](https://mpejcz.github.io/gry-rodzinne/).
+- [Uciekająca kropka](./projekty/uciekajaca-kropka/README.md) — trudny wariant, w którym cel wyczuwa palec lub kursor i ucieka.
