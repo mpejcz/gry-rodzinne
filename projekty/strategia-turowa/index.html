@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#17261f" />
+    <meta
+      name="description"
+      content="Prototyp rodzinnej strategii turowej — etap 1: mapa i wybieranie pól."
+    />
+    <title>Kraina Tur — prototyp strategii</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div>
+          <a class="back-link" href="../../">← Wszystkie gry</a>
+          <h1>Kraina Tur</h1>
+          <p class="subtitle">Prototyp strategii turowej</p>
+        </div>
+
+        <div class="topbar-actions">
+          <span class="stage-badge">Etap 1</span>
+          <button id="new-map" type="button">Nowa mapa</button>
+        </div>
+      </header>
+
+      <section class="play-area" aria-label="Plansza gry">
+        <div class="map-frame">
+          <canvas
+            id="game-map"
+            role="img"
+            aria-label="Izometryczna mapa. Kliknij lub dotknij pola, aby je wybrać."
+          ></canvas>
+          <div class="map-label">NIEZNANA KRAINA</div>
+        </div>
+
+        <aside class="info-panel" aria-live="polite">
+          <p class="eyebrow">Wybrane pole</p>
+          <div id="selection-empty" class="empty-selection">
+            <span class="selection-icon">◇</span>
+            <p>Dotknij dowolnego pola mapy, aby poznać jego teren i współrzędne.</p>
+          </div>
+
+          <div id="selection-details" class="selection-details" hidden>
+            <div id="terrain-swatch" class="terrain-swatch" aria-hidden="true"></div>
+            <div>
+              <strong id="terrain-name">Równina</strong>
+              <span id="tile-coordinates">Pole 1, 1</span>
+            </div>
+          </div>
+
+          <div class="legend" aria-label="Legenda mapy">
+            <span><i class="legend-color plains"></i>Równina</span>
+            <span><i class="legend-color forest"></i>Las</span>
+            <span><i class="legend-color mountain"></i>Góry</span>
+            <span><i class="legend-color water"></i>Woda</span>
+          </div>
+        </aside>
+      </section>
+
+      <footer class="game-footer">
+        <span>Mapa 10 × 10 pól</span>
+        <span class="footer-tip">Kliknij pole • „Nowa mapa” tworzy kolejny układ</span>
+      </footer>
+    </main>
+
+    <script type="module" src="./src/game.js"></script>
+  </body>
+</html>

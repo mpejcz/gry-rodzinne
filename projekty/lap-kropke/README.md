@@ -4,7 +4,7 @@ Najprostszy projekt startowy: mobilna gra zręcznościowa działająca jako stat
 
 ## Zagraj online
 
-Publiczna wersja: <https://mpejcz.github.io/gry-rodzinne/>
+Publiczna wersja: <https://mpejcz.github.io/gry-rodzinne/projekty/lap-kropke/>
 
 ## Cel MVP
 
