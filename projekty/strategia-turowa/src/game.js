@@ -9,6 +9,7 @@ import {
   createGuard,
   createScout,
   enemyStrike,
+  findNextStepToward,
   findTile,
   getAvailableMoves,
   getAttackTargets,
@@ -33,6 +34,7 @@ const endTurnButton = document.querySelector("#end-turn");
 const turnNumber = document.querySelector("#turn-number");
 const coinCount = document.querySelector("#coin-count");
 const mapInstruction = document.querySelector("#map-instruction");
+const objectiveText = document.querySelector("#objective-text");
 const emptySelection = document.querySelector("#selection-empty");
 const selectionDetails = document.querySelector("#selection-details");
 const unitDetails = document.querySelector("#unit-details");
@@ -65,6 +67,7 @@ let enemyGuard = createGuard(enemyCity);
 let turn = 1;
 let coins = STARTING_COINS;
 let gameResult = null;
+let lastEnemyAction = "";
 let selectedTile = null;
 let hoveredTile = null;
 let unitSelected = false;
@@ -92,6 +95,10 @@ function capitalTile() {
 
 function enemyCityTile() {
   return findTile(mapTiles, enemyCity.x, enemyCity.y);
+}
+
+function enemyGuardTile() {
+  return findTile(mapTiles, enemyGuard.x, enemyGuard.y);
 }
 
 function enemyGuardAlive() {
@@ -439,7 +446,7 @@ function drawScout() {
 function drawEnemyGuard() {
   if (!enemyGuardAlive()) return;
 
-  const tile = enemyCityTile();
+  const tile = enemyGuardTile();
   const position = tilePosition(tile);
   const centerY = position.y + layout.tileHeight * 0.4;
   const radius = Math.max(9, layout.tileWidth * 0.17);
@@ -514,6 +521,9 @@ function updateCanvasState() {
   canvas.dataset.playerHealth = String(scout.health);
   canvas.dataset.enemyHealth = String(enemyGuard.health);
   canvas.dataset.enemyAlive = String(enemyGuardAlive());
+  canvas.dataset.enemyUnitX = String(enemyGuard.x);
+  canvas.dataset.enemyUnitY = String(enemyGuard.y);
+  canvas.dataset.enemyAction = lastEnemyAction;
   canvas.dataset.result = gameResult ?? "playing";
   canvas.dataset.passableTiles = mapTiles
     .filter((tile) => tile.terrain !== "water")
@@ -595,10 +605,16 @@ function hideInformationPanels() {
   resultDetails.hidden = true;
 }
 
-function showEmptyState() {
+function showEmptyState(message = "") {
   hideInformationPanels();
   emptySelection.hidden = false;
-  mapInstruction.textContent = "DOTRZYJ DO WROGIEGO MIASTA";
+  objectiveText.textContent =
+    message || "Dotrzyj do Kamiennej Strażnicy, pokonaj obrońcę i zajmij miasto.";
+  mapInstruction.textContent = message
+    ? lastEnemyAction === "attack"
+      ? "STRAŻNIK ATAKUJE"
+      : "RUCH PRZECIWNIKA"
+    : "DOTRZYJ DO WROGIEGO MIASTA";
   canvas.setAttribute(
     "aria-label",
     `Tura ${turn}. Zwiadowca ma ${scout.health} z ${scout.maxHealth} punktów życia. Wrogie miasto jest na polu ${enemyCity.x + 1}, ${enemyCity.y + 1}.`,
@@ -709,7 +725,7 @@ function selectScout() {
   if (gameResult) return;
   selectedTile = scoutTile();
   unitSelected = true;
-  const blockedUnits = enemyGuardAlive() ? [enemyGuard] : [];
+  const blockedUnits = enemyGuardAlive() ? [enemyGuard, enemyCity] : [];
   availableMoves = getAvailableMoves(scout, mapTiles, blockedUnits);
   availableMoveKeys = new Set(availableMoves.map(tileKey));
   attackTargets = getAttackTargets(
@@ -742,12 +758,35 @@ function executeAttack() {
   const result = attackUnit(scout, enemyGuard);
   scout = result.attacker;
   enemyGuard = result.defender;
-  selectedTile = enemyGuardAlive() ? enemyCityTile() : scoutTile();
+  selectedTile = enemyGuardAlive() ? enemyGuardTile() : scoutTile();
   availableMoves = [];
   availableMoveKeys = new Set();
   attackTargets = [];
   attackTargetKeys = new Set();
   showUnitSelection();
+}
+
+function runEnemyTurn() {
+  if (!enemyGuardAlive()) {
+    lastEnemyAction = "none";
+    return "Strażnik został pokonany. Droga do miasta jest otwarta.";
+  }
+
+  if (isAdjacent(enemyGuard, scout)) {
+    scout = enemyStrike(enemyGuard, scout);
+    lastEnemyAction = "attack";
+    return `Strażnik zaatakował zwiadowcę. Pozostałe życie: ${scout.health}/${scout.maxHealth}.`;
+  }
+
+  const nextStep = findNextStepToward(enemyGuard, scout, mapTiles);
+  if (nextStep) {
+    enemyGuard = { ...enemyGuard, x: nextStep.x, y: nextStep.y };
+    lastEnemyAction = "move";
+    return `Strażnik zbliżył się na pole ${enemyGuard.x + 1}, ${enemyGuard.y + 1}.`;
+  }
+
+  lastEnemyAction = "wait";
+  return "Strażnik nie znalazł drogi do zwiadowcy.";
 }
 
 function resetGame() {
@@ -759,6 +798,7 @@ function resetGame() {
   turn = 1;
   coins = STARTING_COINS;
   gameResult = null;
+  lastEnemyAction = "";
   selectedTile = null;
   hoveredTile = null;
   unitSelected = false;
@@ -809,7 +849,7 @@ canvas.addEventListener("pointerup", (event) => {
     availableMoveKeys = new Set();
     attackTargets = [];
     attackTargetKeys = new Set();
-    selectedTile = enemyCityTile();
+    selectedTile = enemyGuardTile();
     showEnemySelection();
   } else if (isSameTile(tile, capital)) {
     unitSelected = false;
@@ -843,7 +883,7 @@ canvas.addEventListener("pointerup", (event) => {
 endTurnButton.addEventListener("click", () => {
   if (gameResult) return;
 
-  scout = enemyStrike(enemyGuard, scout);
+  const enemyMessage = runEnemyTurn();
   if (scout.health <= 0) {
     gameResult = "defeat";
     unitSelected = false;
@@ -869,7 +909,7 @@ endTurnButton.addEventListener("click", () => {
   attackTargetKeys = new Set();
   turnNumber.textContent = String(turn);
   updateEconomyDisplay();
-  showEmptyState();
+  showEmptyState(enemyMessage);
   render();
 });
 

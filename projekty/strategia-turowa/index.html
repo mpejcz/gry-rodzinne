@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 4: przeciwnik, walka i zdobywanie miasta."
+      content="Prototyp rodzinnej strategii turowej — etap 5: przeciwnik sterowany przez AI."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,7 +21,7 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 4</span>
+          <span class="stage-badge">Etap 5</span>
           <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
           <span class="coin-badge" aria-live="polite">
             <i aria-hidden="true">●</i> <strong id="coin-count">3</strong>
@@ -45,7 +45,7 @@
           <p class="eyebrow">Informacje</p>
           <div id="selection-empty" class="empty-selection">
             <span class="selection-icon">▲</span>
-            <p>Dotrzyj do Kamiennej Strażnicy, pokonaj obrońcę i zajmij miasto.</p>
+            <p id="objective-text">Dotrzyj do Kamiennej Strażnicy, pokonaj obrońcę i zajmij miasto.</p>
           </div>
 
           <div id="unit-details" class="unit-details" hidden>
@@ -84,7 +84,7 @@
                 <span id="enemy-health">Życie 3/3</span>
               </div>
             </div>
-            <p class="enemy-status">Podejdź na sąsiednie pole i zaatakuj. Strażnik odpowiada po zakończeniu tury.</p>
+            <p class="enemy-status">Strażnik ściga zwiadowcę i atakuje, gdy znajdzie się na sąsiednim polu.</p>
           </div>
 
           <div id="result-details" class="result-details" hidden>

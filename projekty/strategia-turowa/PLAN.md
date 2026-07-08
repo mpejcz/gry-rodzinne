@@ -39,9 +39,16 @@
 - [x] przejęcie miasta;
 - [x] zwycięstwo i porażka.
 
+## Etap 5 — przeciwnik sterowany przez AI
+
+- [x] wyszukiwanie najkrótszej drogi po lądzie;
+- [x] ruch strażnika w turze przeciwnika;
+- [x] pościg za zwiadowcą;
+- [x] atak po znalezieniu się obok gracza;
+- [x] komunikat o działaniu przeciwnika.
+
 ## Późniejsze etapy
 
-- przeciwnik komputerowy;
 - zapis stanu gry;
 - dopracowanie oprawy i interfejsu.
 
@@ -60,3 +67,7 @@ Etap jest ukończony, gdy stolica pojawia się na mapie, zapewnia monety po zako
 ## Definicja ukończenia etapu 4
 
 Etap jest ukończony, gdy gracz może dotrzeć do wrogiego miasta, walczyć ze strażnikiem, stracić punkty życia podczas jego odpowiedzi i wygrać przez zajęcie miasta po pokonaniu obrońcy.
+
+## Definicja ukończenia etapu 5
+
+Etap jest ukończony, gdy strażnik po zakończeniu tury samodzielnie zbliża się najkrótszą dostępną drogą do zwiadowcy, a po osiągnięciu sąsiedniego pola atakuje go w kolejnych turach.

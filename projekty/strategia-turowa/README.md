@@ -4,7 +4,7 @@ Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi gr
 
 ## Aktualny stan
 
-Etap 4 zawiera:
+Etap 5 zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
@@ -23,7 +23,11 @@ Etap 4 zawiera:
 - punkty życia oraz atak zwiadowcy;
 - odpowiedź strażnika po zakończeniu tury;
 - przejęcie miasta po pokonaniu obrońcy;
-- warunki zwycięstwa i porażki.
+- warunki zwycięstwa i porażki;
+- automatyczną turę przeciwnika;
+- wyznaczanie najkrótszej drogi po lądzie;
+- pościg strażnika za zwiadowcą;
+- informację o ruchu lub ataku przeciwnika.
 
 ## Uruchomienie
 

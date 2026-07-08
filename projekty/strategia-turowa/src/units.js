@@ -128,6 +128,50 @@ export function enemyStrike(enemy, player) {
   };
 }
 
+export function findNextStepToward(unit, target, tiles, blockedTiles = []) {
+  const startKey = `${unit.x}:${unit.y}`;
+  const visited = new Set([startKey]);
+  const queue = [{ x: unit.x, y: unit.y, firstStep: null }];
+  const directions = [
+    { x: 0, y: -1 },
+    { x: 1, y: 0 },
+    { x: 0, y: 1 },
+    { x: -1, y: 0 },
+  ];
+
+  while (queue.length) {
+    const current = queue.shift();
+
+    for (const direction of directions) {
+      const nextX = current.x + direction.x;
+      const nextY = current.y + direction.y;
+      const key = `${nextX}:${nextY}`;
+      const tile = findTile(tiles, nextX, nextY);
+      const isTarget = nextX === target.x && nextY === target.y;
+      const blocked = blockedTiles.some(
+        (candidate) => candidate.x === nextX && candidate.y === nextY,
+      );
+
+      if (
+        !tile ||
+        SCOUT.blockedTerrain.includes(tile.terrain) ||
+        visited.has(key) ||
+        (blocked && !isTarget)
+      ) {
+        continue;
+      }
+
+      const firstStep = current.firstStep ?? tile;
+      if (isTarget) return firstStep;
+
+      visited.add(key);
+      queue.push({ x: nextX, y: nextY, firstStep });
+    }
+  }
+
+  return null;
+}
+
 export function moveUnit(unit, destination) {
   return {
     ...unit,
