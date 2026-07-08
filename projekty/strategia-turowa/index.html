@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 2: zwiadowca, ruch i tury."
+      content="Prototyp rodzinnej strategii turowej — etap 3: stolica, monety i rozwój."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,8 +21,11 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 2</span>
+          <span class="stage-badge">Etap 3</span>
           <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
+          <span class="coin-badge" aria-live="polite">
+            <i aria-hidden="true">●</i> <strong id="coin-count">3</strong>
+          </span>
           <button id="new-map" class="secondary-button" type="button">Nowa mapa</button>
           <button id="end-turn" type="button">Zakończ turę</button>
         </div>
@@ -35,14 +38,14 @@
             role="img"
             aria-label="Izometryczna mapa. Kliknij lub dotknij pola, aby je wybrać."
           ></canvas>
-          <div id="map-instruction" class="map-label">WYBIERZ ZWIADOWCĘ</div>
+          <div id="map-instruction" class="map-label">WYBIERZ JEDNOSTKĘ LUB STOLICĘ</div>
         </div>
 
         <aside class="info-panel" aria-live="polite">
           <p class="eyebrow">Informacje</p>
           <div id="selection-empty" class="empty-selection">
             <span class="selection-icon">▲</span>
-            <p>Wybierz zwiadowcę na mapie, aby zobaczyć dostępne pola ruchu.</p>
+            <p>Wybierz zwiadowcę, aby wykonać ruch, albo stolicę, aby nią zarządzać.</p>
           </div>
 
           <div id="unit-details" class="unit-details" hidden>
@@ -54,6 +57,20 @@
               </div>
             </div>
             <p id="unit-status" class="unit-status">Gotowy do ruchu</p>
+          </div>
+
+          <div id="city-details" class="city-details" hidden>
+            <div class="city-card">
+              <div class="city-portrait" aria-hidden="true">♜</div>
+              <div>
+                <strong id="city-name">Zielony Gród</strong>
+                <span id="city-level">Poziom 1</span>
+              </div>
+            </div>
+            <p id="city-income" class="city-income">Dochód: +2 monety na turę</p>
+            <button id="upgrade-city" class="city-upgrade-button" type="button">
+              Rozwiń miasto — 5 monet
+            </button>
           </div>
 
           <div id="selection-details" class="selection-details" hidden>
@@ -74,8 +91,8 @@
       </section>
 
       <footer class="game-footer">
-        <span>Mapa 10 × 10 • Jeden ruch na turę</span>
-        <span class="footer-tip">Wybierz zwiadowcę, a potem podświetlone pole</span>
+        <span>Stolica zapewnia dochód co turę</span>
+        <span class="footer-tip">Wybierz miasto, aby przeznaczyć monety na rozwój</span>
       </footer>
     </main>
 

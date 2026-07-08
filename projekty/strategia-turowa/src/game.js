@@ -10,6 +10,13 @@ import {
   getAvailableMoves,
   moveUnit,
 } from "./units.js";
+import {
+  canUpgradeCity,
+  createCapital,
+  getUpgradeCost,
+  STARTING_COINS,
+  upgradeCity,
+} from "./cities.js";
 
 const canvas = document.querySelector("#game-map");
 const context = canvas.getContext("2d");
@@ -17,19 +24,27 @@ const mapFrame = document.querySelector(".map-frame");
 const newMapButton = document.querySelector("#new-map");
 const endTurnButton = document.querySelector("#end-turn");
 const turnNumber = document.querySelector("#turn-number");
+const coinCount = document.querySelector("#coin-count");
 const mapInstruction = document.querySelector("#map-instruction");
 const emptySelection = document.querySelector("#selection-empty");
 const selectionDetails = document.querySelector("#selection-details");
 const unitDetails = document.querySelector("#unit-details");
 const unitPosition = document.querySelector("#unit-position");
 const unitStatus = document.querySelector("#unit-status");
+const cityDetails = document.querySelector("#city-details");
+const cityName = document.querySelector("#city-name");
+const cityLevel = document.querySelector("#city-level");
+const cityIncome = document.querySelector("#city-income");
+const upgradeCityButton = document.querySelector("#upgrade-city");
 const terrainName = document.querySelector("#terrain-name");
 const terrainSwatch = document.querySelector("#terrain-swatch");
 const tileCoordinates = document.querySelector("#tile-coordinates");
 
 let mapTiles = generateMap();
-let scout = createScout(mapTiles);
+let capital = createCapital(mapTiles);
+let scout = createScout(mapTiles, capital);
 let turn = 1;
+let coins = STARTING_COINS;
 let selectedTile = null;
 let hoveredTile = null;
 let unitSelected = false;
@@ -47,6 +62,10 @@ function isSameTile(first, second) {
 
 function scoutTile() {
   return findTile(mapTiles, scout.x, scout.y);
+}
+
+function capitalTile() {
+  return findTile(mapTiles, capital.x, capital.y);
 }
 
 function calculateLayout(width, height) {
@@ -194,7 +213,7 @@ function drawTile(tile) {
     context.stroke(path);
   }
 
-  if (selected && !isSameTile(tile, scout)) {
+  if (selected && !isSameTile(tile, scout) && !isSameTile(tile, capital)) {
     context.beginPath();
     context.arc(
       position.x,
@@ -206,6 +225,81 @@ function drawTile(tile) {
     context.fillStyle = "#fff4c7";
     context.fill();
   }
+}
+
+function drawCapital() {
+  const tile = capitalTile();
+  const position = tilePosition(tile);
+  const centerY = position.y + layout.tileHeight * 0.42;
+  const size = Math.max(8, layout.tileWidth * 0.15);
+  const towerCount = Math.min(capital.level, 3);
+
+  context.save();
+
+  context.beginPath();
+  context.ellipse(
+    position.x,
+    centerY + size * 0.78,
+    size * 1.3,
+    size * 0.46,
+    0,
+    0,
+    Math.PI * 2,
+  );
+  context.fillStyle = "rgb(7 19 14 / 34%)";
+  context.fill();
+
+  if (isSameTile(selectedTile, capital) && !isSameTile(scout, capital)) {
+    context.beginPath();
+    context.arc(position.x, centerY, size + 7, 0, Math.PI * 2);
+    context.strokeStyle = "#fff0bd";
+    context.lineWidth = 3;
+    context.stroke();
+  }
+
+  context.fillStyle = "#d8cba3";
+  context.fillRect(
+    position.x - size,
+    centerY - size * 0.16,
+    size * 2,
+    size * 0.85,
+  );
+
+  for (let index = 0; index < towerCount; index += 1) {
+    const offset = (index - (towerCount - 1) / 2) * size * 0.72;
+    context.fillStyle = "#eee2bd";
+    context.fillRect(
+      position.x + offset - size * 0.28,
+      centerY - size * 0.62,
+      size * 0.56,
+      size * 1.05,
+    );
+    context.beginPath();
+    context.moveTo(position.x + offset, centerY - size);
+    context.lineTo(position.x + offset + size * 0.42, centerY - size * 0.55);
+    context.lineTo(position.x + offset - size * 0.42, centerY - size * 0.55);
+    context.closePath();
+    context.fillStyle = "#79563a";
+    context.fill();
+  }
+
+  context.beginPath();
+  context.moveTo(position.x, centerY + size * 0.18);
+  context.lineTo(position.x + size * 0.25, centerY + size * 0.68);
+  context.lineTo(position.x - size * 0.25, centerY + size * 0.68);
+  context.closePath();
+  context.fillStyle = "#59412f";
+  context.fill();
+
+  context.strokeStyle = "#f7e9bd";
+  context.lineWidth = Math.max(1.5, size * 0.1);
+  context.strokeRect(
+    position.x - size,
+    centerY - size * 0.16,
+    size * 2,
+    size * 0.85,
+  );
+  context.restore();
 }
 
 function drawScout() {
@@ -271,6 +365,16 @@ function updateCanvasState() {
   canvas.dataset.unitY = String(scout.y);
   canvas.dataset.unitMoved = String(scout.hasMoved);
   canvas.dataset.availableMoves = availableMoves.map(tileKey).join(",");
+  canvas.dataset.cityX = String(capital.x);
+  canvas.dataset.cityY = String(capital.y);
+  canvas.dataset.cityLevel = String(capital.level);
+  canvas.dataset.cityIncome = String(capital.income);
+  canvas.dataset.coins = String(coins);
+  canvas.dataset.upgradeCost = String(getUpgradeCost(capital));
+}
+
+function updateEconomyDisplay() {
+  coinCount.textContent = String(coins);
 }
 
 function render() {
@@ -291,6 +395,7 @@ function render() {
   context.fillRect(0, 0, layout.width, layout.height);
 
   mapTiles.forEach(drawTile);
+  drawCapital();
   drawScout();
   updateCanvasState();
 }
@@ -335,15 +440,16 @@ function hideInformationPanels() {
   emptySelection.hidden = true;
   selectionDetails.hidden = true;
   unitDetails.hidden = true;
+  cityDetails.hidden = true;
 }
 
 function showEmptyState() {
   hideInformationPanels();
   emptySelection.hidden = false;
-  mapInstruction.textContent = "WYBIERZ ZWIADOWCĘ";
+  mapInstruction.textContent = "WYBIERZ JEDNOSTKĘ LUB STOLICĘ";
   canvas.setAttribute(
     "aria-label",
-    `Tura ${turn}. Zwiadowca czeka na polu ${scout.x + 1}, ${scout.y + 1}.`,
+    `Tura ${turn}. Masz ${coins} monet. Stolica jest na polu ${capital.x + 1}, ${capital.y + 1}, a zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}.`,
   );
 }
 
@@ -394,6 +500,23 @@ function showUnitSelection() {
   );
 }
 
+function showCitySelection() {
+  const cost = getUpgradeCost(capital);
+
+  hideInformationPanels();
+  cityDetails.hidden = false;
+  cityName.textContent = capital.name;
+  cityLevel.textContent = `Poziom ${capital.level}`;
+  cityIncome.textContent = `Dochód: +${capital.income} monety na turę`;
+  upgradeCityButton.textContent = `Rozwiń miasto — ${cost} monet`;
+  upgradeCityButton.disabled = !canUpgradeCity(capital, coins);
+  mapInstruction.textContent = "STOLICA";
+  canvas.setAttribute(
+    "aria-label",
+    `${capital.name}, poziom ${capital.level}, pole ${capital.x + 1}, ${capital.y + 1}. Dochód ${capital.income} monety na turę. Rozwój kosztuje ${cost} monet.`,
+  );
+}
+
 function selectScout() {
   selectedTile = scoutTile();
   unitSelected = true;
@@ -412,14 +535,17 @@ function executeMove(destination) {
 
 function resetGame() {
   mapTiles = generateMap(Date.now());
-  scout = createScout(mapTiles);
+  capital = createCapital(mapTiles);
+  scout = createScout(mapTiles, capital);
   turn = 1;
+  coins = STARTING_COINS;
   selectedTile = null;
   hoveredTile = null;
   unitSelected = false;
   availableMoves = [];
   availableMoveKeys = new Set();
   turnNumber.textContent = String(turn);
+  updateEconomyDisplay();
   showEmptyState();
   render();
 }
@@ -451,6 +577,12 @@ canvas.addEventListener("pointerup", (event) => {
     selectScout();
   } else if (unitSelected && availableMoveKeys.has(tileKey(tile))) {
     executeMove(tile);
+  } else if (isSameTile(tile, capital)) {
+    unitSelected = false;
+    availableMoves = [];
+    availableMoveKeys = new Set();
+    selectedTile = capitalTile();
+    showCitySelection();
   } else {
     unitSelected = false;
     availableMoves = [];
@@ -464,6 +596,7 @@ canvas.addEventListener("pointerup", (event) => {
 
 endTurnButton.addEventListener("click", () => {
   turn += 1;
+  coins += capital.income;
   scout = { ...scout, hasMoved: false };
   selectedTile = null;
   hoveredTile = null;
@@ -471,12 +604,23 @@ endTurnButton.addEventListener("click", () => {
   availableMoves = [];
   availableMoveKeys = new Set();
   turnNumber.textContent = String(turn);
+  updateEconomyDisplay();
   showEmptyState();
   render();
 });
 
 newMapButton.addEventListener("click", resetGame);
 
+upgradeCityButton.addEventListener("click", () => {
+  const result = upgradeCity(capital, coins);
+  capital = result.city;
+  coins = result.coins;
+  updateEconomyDisplay();
+  showCitySelection();
+  render();
+});
+
+updateEconomyDisplay();
 showEmptyState();
 const resizeObserver = new ResizeObserver(resizeCanvas);
 resizeObserver.observe(mapFrame);

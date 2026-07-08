@@ -104,6 +104,26 @@ h1 {
   font-size: 1rem;
 }
 
+.coin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #6f5930;
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: #332a19;
+  color: #f4f0df;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.coin-badge i {
+  color: #e7bd68;
+  font-size: 0.72rem;
+  font-style: normal;
+  text-shadow: 0 0 8px rgb(231 189 104 / 45%);
+}
+
 button {
   border: 0;
   border-radius: 12px;
@@ -174,6 +194,8 @@ button:focus-visible,
 }
 
 #game-map {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -311,6 +333,76 @@ button:focus-visible,
   color: #d8c59f;
 }
 
+.city-details {
+  display: grid;
+  gap: 16px;
+}
+
+.city-details[hidden] {
+  display: none;
+}
+
+.city-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.city-card strong,
+.city-card span {
+  display: block;
+}
+
+.city-card strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+}
+
+.city-card span {
+  margin-top: 4px;
+  color: #9cb2a6;
+  font-size: 0.85rem;
+}
+
+.city-portrait {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  place-items: center;
+  border: 2px solid #d3c7a6;
+  border-radius: 14px;
+  background: #72664d;
+  color: #fff5d9;
+  font-size: 1.45rem;
+  box-shadow: inset 0 -8px 14px rgb(0 0 0 / 16%);
+}
+
+.city-income {
+  margin: 0;
+  border: 1px solid #415b4b;
+  border-radius: 12px;
+  padding: 11px 12px;
+  background: rgb(26 48 36 / 70%);
+  color: #bcd0c3;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.city-upgrade-button {
+  width: 100%;
+  padding-inline: 10px;
+  font-size: 0.8rem;
+}
+
+button:disabled {
+  background: #37433c;
+  color: #87948d;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 .selection-details span {
   margin-top: 4px;
   color: #9cb2a6;
@@ -393,8 +485,13 @@ button:focus-visible,
   .topbar-actions {
     display: grid;
     width: 100%;
-    grid-template-columns: auto 1fr 1.25fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
+  }
+
+  .turn-badge,
+  .coin-badge {
+    justify-content: center;
   }
 
   .topbar-actions button {
@@ -430,6 +527,10 @@ button:focus-visible,
   .unit-details {
     grid-template-columns: 1fr;
     align-items: center;
+  }
+
+  .city-details {
+    grid-template-columns: 1fr;
   }
 
   .empty-selection p {

@@ -11,6 +11,10 @@ function distanceFromMapCenter(tile) {
   return Math.abs(tile.x - centerX) + Math.abs(tile.y - centerY);
 }
 
+function distanceFromTile(tile, origin) {
+  return Math.abs(tile.x - origin.x) + Math.abs(tile.y - origin.y);
+}
+
 function hasPassableNeighbor(tile, tiles) {
   const directions = [
     { x: 0, y: -1 },
@@ -29,14 +33,18 @@ export function findTile(tiles, x, y) {
   return tiles.find((tile) => tile.x === x && tile.y === y) ?? null;
 }
 
-export function createScout(tiles) {
-  const startTile = tiles
+export function createScout(tiles, capital = null) {
+  const candidates = tiles
     .filter(
       (tile) =>
         !SCOUT.blockedTerrain.includes(tile.terrain) &&
+        (!capital || tile.x !== capital.x || tile.y !== capital.y) &&
         hasPassableNeighbor(tile, tiles),
-    )
-    .sort((first, second) => distanceFromMapCenter(first) - distanceFromMapCenter(second))[0];
+    );
+  const startTile = candidates.sort((first, second) => {
+    if (capital) return distanceFromTile(first, capital) - distanceFromTile(second, capital);
+    return distanceFromMapCenter(first) - distanceFromMapCenter(second);
+  })[0];
 
   if (!startTile) {
     throw new Error("Nie znaleziono pola startowego dla zwiadowcy.");

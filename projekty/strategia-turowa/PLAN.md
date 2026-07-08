@@ -20,9 +20,17 @@
 - [x] przycisk zakończenia tury;
 - [x] licznik tur.
 
+## Etap 3 — stolica i gospodarka
+
+- [x] stolica na mapie;
+- [x] początkowy zapas monet;
+- [x] dochód ze stolicy naliczany co turę;
+- [x] panel informacji o mieście;
+- [x] rozwój miasta za monety;
+- [x] wzrost dochodu po rozwoju miasta.
+
 ## Późniejsze etapy
 
-- miasta i zasoby;
 - walka oraz przejmowanie miast;
 - przeciwnik komputerowy;
 - zapis stanu gry;
@@ -35,3 +43,7 @@ Etap jest ukończony, gdy mapa prawidłowo skaluje się na komputerze i telefoni
 ## Definicja ukończenia etapu 2
 
 Etap jest ukończony, gdy gracz może wybrać zwiadowcę, zobaczyć legalne pola, wykonać jeden ruch bez wchodzenia do wody, zakończyć turę i ponownie poruszyć jednostkę w następnej turze.
+
+## Definicja ukończenia etapu 3
+
+Etap jest ukończony, gdy stolica pojawia się na mapie, zapewnia monety po zakończeniu tury, a gracz może wydać zgromadzone środki na zwiększenie poziomu i przyszłego dochodu miasta.

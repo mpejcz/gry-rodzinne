@@ -4,7 +4,7 @@ Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi gr
 
 ## Aktualny stan
 
-Etap 2 zawiera:
+Etap 3 zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
@@ -15,7 +15,10 @@ Etap 2 zawiera:
 - podświetlenie dostępnych pól ruchu;
 - blokadę ruchu przez wodę;
 - jeden ruch jednostki na turę;
-- zakończenie tury i licznik tur.
+- zakończenie tury i licznik tur;
+- stolicę umieszczoną na mapie;
+- monety oraz dochód naliczany co turę;
+- rozwój stolicy zwiększający przyszły dochód.
 
 ## Uruchomienie
 
@@ -39,4 +42,5 @@ Projekt nie wymaga instalowania zależności ani kompilacji.
 - `style.css` — responsywny wygląd;
 - `src/map.js` — rodzaje terenu i generator mapy;
 - `src/units.js` — jednostki i reguły ruchu;
+- `src/cities.js` — stolica, ceny rozwoju i gospodarka;
 - `src/game.js` — stan tury, rysowanie oraz sterowanie.
