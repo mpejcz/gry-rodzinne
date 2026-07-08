@@ -1,10 +1,12 @@
 # Kraina Tur
 
+[Zagraj online](https://mpejcz.github.io/gry-rodzinne/projekty/strategia-turowa/)
+
 Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi grami 4X. Projekt rozwija własne zasady, świat i oprawę.
 
 ## Aktualny stan
 
-Etap 6 zawiera:
+Grywalne MVP zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
@@ -32,6 +34,17 @@ Etap 6 zawiera:
 - ręczny przycisk zapisu;
 - wczytywanie pełnego stanu rozgrywki;
 - wersjonowanie i walidację zapisanych danych.
+
+## Balans MVP
+
+- zwiadowca: 3 punkty życia, 2 obrażenia;
+- strażnik: 3 punkty życia, 1 obrażenie;
+- jednostka wykonuje jeden ruch albo atak na turę;
+- strażnik przemieszcza się o jedno pole po zakończeniu tury gracza;
+- stolica zaczyna z dochodem 2 monet, a pierwszy rozwój kosztuje 5 monet;
+- poprawnie rozegrane starcie pozostawia zwiadowcę z 1 punktem życia.
+
+Przycisk „Jak grać” w interfejsie pokazuje skrócone zasady i parametry jednostek.
 
 ## Uruchomienie
 

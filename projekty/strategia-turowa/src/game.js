@@ -63,6 +63,8 @@ const restartGameButton = document.querySelector("#restart-game");
 const saveGameButton = document.querySelector("#save-game");
 const loadGameButton = document.querySelector("#load-game");
 const saveStatus = document.querySelector("#save-status");
+const helpGameButton = document.querySelector("#help-game");
+const helpDialog = document.querySelector("#help-dialog");
 const terrainName = document.querySelector("#terrain-name");
 const terrainSwatch = document.querySelector("#terrain-swatch");
 const tileCoordinates = document.querySelector("#tile-coordinates");
@@ -1045,6 +1047,9 @@ saveGameButton.addEventListener("click", () => {
   persistGame("Rozgrywka została zapisana ręcznie.");
 });
 loadGameButton.addEventListener("click", restoreGame);
+helpGameButton.addEventListener("click", () => {
+  if (!helpDialog.open) helpDialog.showModal();
+});
 
 updateEconomyDisplay();
 showEmptyState();

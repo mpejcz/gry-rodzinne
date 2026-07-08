@@ -56,9 +56,21 @@
 - [x] wczytywanie pełnej rozgrywki;
 - [x] komunikaty o stanie zapisu.
 
+## Etap 7 — kandydat wydaniowy MVP
+
+- [x] ekran „Jak grać”;
+- [x] dostępne zamykanie pomocy klawiaturą i przyciskiem;
+- [x] udokumentowane parametry balansu;
+- [x] pełny test zwycięstwa i porażki;
+- [x] test zapisu i wczytywania;
+- [x] kontrola układu mobilnego.
+
 ## Późniejsze etapy
 
-- dopracowanie oprawy i interfejsu.
+- dodatkowe jednostki;
+- drzewko technologii;
+- większe mapy i kolejne miasta;
+- rozbudowane zachowanie AI.
 
 ## Definicja ukończenia etapu 1
 
@@ -83,3 +95,7 @@ Etap jest ukończony, gdy strażnik po zakończeniu tury samodzielnie zbliża si
 ## Definicja ukończenia etapu 6
 
 Etap jest ukończony, gdy gracz może zapisać rozgrywkę, rozpocząć inny układ mapy, a następnie odtworzyć mapę, jednostki, miasta, ekonomię, turę i wynik bez utraty stanu.
+
+## Definicja ukończenia etapu 7
+
+MVP jest gotowe do publikacji, gdy zasady są dostępne bez opuszczania gry, najważniejsze ścieżki przeszły testy na komputerze i telefonie, a publiczna wersja może zostać uruchomiona bez instalowania zależności.

@@ -581,6 +581,133 @@ button:disabled {
   font-size: 0.78rem;
 }
 
+dialog {
+  width: min(620px, calc(100% - 28px));
+  max-height: calc(100vh - 28px);
+  overflow: auto;
+  border: 1px solid #486353;
+  border-radius: 22px;
+  padding: 0;
+  background: #14251c;
+  color: #f4f0df;
+  box-shadow: 0 30px 100px rgb(0 0 0 / 55%);
+}
+
+dialog::backdrop {
+  background: rgb(4 11 8 / 78%);
+  backdrop-filter: blur(4px);
+}
+
+.help-dialog-content {
+  padding: 28px;
+}
+
+.help-dialog-content > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.help-dialog-content h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.25rem;
+}
+
+.help-dialog-content .eyebrow {
+  margin-bottom: 7px;
+}
+
+.dialog-close {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #486353;
+  border-radius: 50%;
+  background: transparent;
+  color: #c7d3cc;
+  box-shadow: none;
+  font-size: 1.5rem;
+}
+
+.help-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 24px 0 18px;
+  padding: 0;
+  counter-reset: help-step;
+  list-style: none;
+}
+
+.help-steps li {
+  position: relative;
+  min-height: 116px;
+  border: 1px solid #344c3d;
+  border-radius: 15px;
+  padding: 17px 16px 15px 52px;
+  background: #192e23;
+  counter-increment: help-step;
+}
+
+.help-steps li::before {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7bd68;
+  color: #172018;
+  content: counter(help-step);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.help-steps strong,
+.help-steps span {
+  display: block;
+}
+
+.help-steps strong {
+  margin-bottom: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+}
+
+.help-steps span {
+  color: #a8bbb0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.help-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.help-notes span {
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: #263c2f;
+  color: #b8c9bf;
+  font-size: 0.75rem;
+}
+
+.help-dialog-content > form:last-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog-confirm {
+  min-width: 210px;
+}
+
 @media (max-width: 760px) {
   .game-shell {
     width: min(100% - 20px, 640px);
@@ -681,7 +808,28 @@ button:disabled {
 
   .save-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .save-actions button {
+    padding-inline: 7px;
+    font-size: 0.72rem;
+  }
+
+  .help-dialog-content {
+    padding: 22px 18px;
+  }
+
+  .help-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .help-steps li {
+    min-height: 0;
+  }
+
+  .dialog-confirm {
+    width: 100%;
   }
 
   .footer-tip {

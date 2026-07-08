@@ -76,7 +76,7 @@ Osobne repozytorium dla konkretnej gry warto utworzyć dopiero wtedy, gdy:
 
 ## Rozpoczęte projekty
 
-- [Kraina Tur](./projekty/strategia-turowa/README.md) — prototyp strategii turowej 2D z izometryczną mapą.
+- [Kraina Tur](./projekty/strategia-turowa/README.md) — grywalne MVP strategii turowej 2D z izometryczną mapą.
 - [Łap kropkę](./projekty/lap-kropke/README.md) — prosta mobilna gra zręcznościowa.
   [Zagraj online](https://mpejcz.github.io/gry-rodzinne/projekty/lap-kropke/).
 - [Uciekająca kropka](./projekty/uciekajaca-kropka/README.md) — trudny wariant, w którym cel wyczuwa palec lub kursor i ucieka.

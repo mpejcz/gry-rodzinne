@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 6: zapis i wczytywanie gry."
+      content="Kraina Tur — grywalne MVP rodzinnej strategii turowej 2D."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,7 +21,7 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 6</span>
+          <span class="stage-badge">MVP</span>
           <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
           <span class="coin-badge" aria-live="polite">
             <i aria-hidden="true">●</i> <strong id="coin-count">3</strong>
@@ -119,11 +119,43 @@
       <section class="save-bar" aria-label="Zapis gry">
         <p id="save-status" aria-live="polite">Gra nie została jeszcze zapisana.</p>
         <div class="save-actions">
+          <button id="help-game" class="secondary-button" type="button">Jak grać</button>
           <button id="save-game" class="secondary-button" type="button">Zapisz grę</button>
           <button id="load-game" class="secondary-button" type="button" disabled>Wczytaj grę</button>
         </div>
       </section>
     </main>
+
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <div class="help-dialog-content">
+        <header>
+          <div>
+            <p class="eyebrow">Zasady MVP</p>
+            <h2 id="help-title">Jak grać</h2>
+          </div>
+          <form method="dialog">
+            <button class="dialog-close" aria-label="Zamknij pomoc" type="submit">×</button>
+          </form>
+        </header>
+
+        <ol class="help-steps">
+          <li><strong>Rusz zwiadowcą</strong><span>Wybierz złote pole. Woda blokuje ruch.</span></li>
+          <li><strong>Rozwijaj stolicę</strong><span>Miasto daje monety co turę. Rozwój zwiększa dochód.</span></li>
+          <li><strong>Pokonaj strażnika</strong><span>Czerwone pole oznacza atak. Zwiadowca zadaje 2 obrażenia, strażnik 1.</span></li>
+          <li><strong>Zdobądź miasto</strong><span>Po walce wejdź do Kamiennej Strażnicy, aby wygrać.</span></li>
+        </ol>
+
+        <div class="help-notes">
+          <span>▲ Zwiadowca: 3 życia</span>
+          <span>◆ Strażnik: 3 życia</span>
+          <span>● Start: 3 monety</span>
+        </div>
+
+        <form method="dialog">
+          <button class="dialog-confirm" type="submit">Rozumiem — zaczynam</button>
+        </form>
+      </div>
+    </dialog>
 
     <script type="module" src="./src/game.js"></script>
   </body>
