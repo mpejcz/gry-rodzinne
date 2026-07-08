@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 3: stolica, monety i rozwój."
+      content="Prototyp rodzinnej strategii turowej — etap 4: przeciwnik, walka i zdobywanie miasta."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,7 +21,7 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 3</span>
+          <span class="stage-badge">Etap 4</span>
           <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
           <span class="coin-badge" aria-live="polite">
             <i aria-hidden="true">●</i> <strong id="coin-count">3</strong>
@@ -45,7 +45,7 @@
           <p class="eyebrow">Informacje</p>
           <div id="selection-empty" class="empty-selection">
             <span class="selection-icon">▲</span>
-            <p>Wybierz zwiadowcę, aby wykonać ruch, albo stolicę, aby nią zarządzać.</p>
+            <p>Dotrzyj do Kamiennej Strażnicy, pokonaj obrońcę i zajmij miasto.</p>
           </div>
 
           <div id="unit-details" class="unit-details" hidden>
@@ -54,6 +54,7 @@
               <div>
                 <strong>Zwiadowca</strong>
                 <span id="unit-position">Pole 1, 1</span>
+                <span id="unit-health">Życie 3/3</span>
               </div>
             </div>
             <p id="unit-status" class="unit-status">Gotowy do ruchu</p>
@@ -65,12 +66,32 @@
               <div>
                 <strong id="city-name">Zielony Gród</strong>
                 <span id="city-level">Poziom 1</span>
+                <span id="city-owner">Twoje miasto</span>
               </div>
             </div>
             <p id="city-income" class="city-income">Dochód: +2 monety na turę</p>
             <button id="upgrade-city" class="city-upgrade-button" type="button">
               Rozwiń miasto — 5 monet
             </button>
+          </div>
+
+          <div id="enemy-details" class="enemy-details" hidden>
+            <div class="enemy-card">
+              <div class="enemy-portrait" aria-hidden="true">◆</div>
+              <div>
+                <strong>Strażnik</strong>
+                <span id="enemy-position">Pole 1, 1</span>
+                <span id="enemy-health">Życie 3/3</span>
+              </div>
+            </div>
+            <p class="enemy-status">Podejdź na sąsiednie pole i zaatakuj. Strażnik odpowiada po zakończeniu tury.</p>
+          </div>
+
+          <div id="result-details" class="result-details" hidden>
+            <span id="result-icon" class="result-icon" aria-hidden="true">★</span>
+            <strong id="result-title">Zwycięstwo</strong>
+            <p id="result-message">Kamienna Strażnica należy do Ciebie.</p>
+            <button id="restart-game" type="button">Zagraj ponownie</button>
           </div>
 
           <div id="selection-details" class="selection-details" hidden>
@@ -91,8 +112,8 @@
       </section>
 
       <footer class="game-footer">
-        <span>Stolica zapewnia dochód co turę</span>
-        <span class="footer-tip">Wybierz miasto, aby przeznaczyć monety na rozwój</span>
+        <span>Złote pola: ruch • Czerwone pola: atak</span>
+        <span class="footer-tip">Pokonaj strażnika i wejdź do wrogiego miasta</span>
       </footer>
     </main>
 

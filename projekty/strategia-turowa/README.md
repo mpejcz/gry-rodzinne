@@ -4,7 +4,7 @@ Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi gr
 
 ## Aktualny stan
 
-Etap 3 zawiera:
+Etap 4 zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
@@ -18,7 +18,12 @@ Etap 3 zawiera:
 - zakończenie tury i licznik tur;
 - stolicę umieszczoną na mapie;
 - monety oraz dochód naliczany co turę;
-- rozwój stolicy zwiększający przyszły dochód.
+- rozwój stolicy zwiększający przyszły dochód;
+- wrogie miasto i jednostkę strażnika;
+- punkty życia oraz atak zwiadowcy;
+- odpowiedź strażnika po zakończeniu tury;
+- przejęcie miasta po pokonaniu obrońcy;
+- warunki zwycięstwa i porażki.
 
 ## Uruchomienie
 

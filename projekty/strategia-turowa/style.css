@@ -395,6 +395,94 @@ button:focus-visible,
   font-size: 0.8rem;
 }
 
+.city-upgrade-button[hidden] {
+  display: none;
+}
+
+.enemy-details,
+.result-details {
+  display: grid;
+  gap: 16px;
+}
+
+.enemy-details[hidden],
+.result-details[hidden] {
+  display: none;
+}
+
+.enemy-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.enemy-card strong,
+.enemy-card span {
+  display: block;
+}
+
+.enemy-card strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+}
+
+.enemy-card span {
+  margin-top: 4px;
+  color: #c8a9a2;
+  font-size: 0.82rem;
+}
+
+.enemy-portrait {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  place-items: center;
+  border: 2px solid #e3a090;
+  border-radius: 50%;
+  background: #843e36;
+  color: #ffe1d9;
+  font-size: 1.35rem;
+  box-shadow: inset 0 -8px 14px rgb(0 0 0 / 18%);
+}
+
+.enemy-status {
+  margin: 0;
+  border: 1px solid #704941;
+  border-radius: 12px;
+  padding: 12px;
+  background: rgb(77 38 32 / 45%);
+  color: #d8b9b1;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.result-details {
+  align-content: start;
+  text-align: center;
+}
+
+.result-icon {
+  color: #e7bd68;
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.result-details strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.6rem;
+}
+
+.result-details p {
+  margin: 0;
+  color: #b8c8be;
+  line-height: 1.5;
+}
+
+.result-details.defeat .result-icon {
+  color: #d67c6a;
+}
+
 button:disabled {
   background: #37433c;
   color: #87948d;

@@ -29,9 +29,18 @@
 - [x] rozwój miasta za monety;
 - [x] wzrost dochodu po rozwoju miasta.
 
+## Etap 4 — przeciwnik i walka
+
+- [x] wrogie miasto na osiągalnym polu;
+- [x] jednostka strażnika;
+- [x] punkty życia i atak;
+- [x] odpowiedź strażnika po zakończeniu tury;
+- [x] pokonanie wrogiej jednostki;
+- [x] przejęcie miasta;
+- [x] zwycięstwo i porażka.
+
 ## Późniejsze etapy
 
-- walka oraz przejmowanie miast;
 - przeciwnik komputerowy;
 - zapis stanu gry;
 - dopracowanie oprawy i interfejsu.
@@ -47,3 +56,7 @@ Etap jest ukończony, gdy gracz może wybrać zwiadowcę, zobaczyć legalne pola
 ## Definicja ukończenia etapu 3
 
 Etap jest ukończony, gdy stolica pojawia się na mapie, zapewnia monety po zakończeniu tury, a gracz może wydać zgromadzone środki na zwiększenie poziomu i przyszłego dochodu miasta.
+
+## Definicja ukończenia etapu 4
+
+Etap jest ukończony, gdy gracz może dotrzeć do wrogiego miasta, walczyć ze strażnikiem, stracić punkty życia podczas jego odpowiedzi i wygrać przez zajęcie miasta po pokonaniu obrońcy.

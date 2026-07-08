@@ -5,14 +5,21 @@ import {
   TERRAIN,
 } from "./map.js";
 import {
+  attackUnit,
+  createGuard,
   createScout,
+  enemyStrike,
   findTile,
   getAvailableMoves,
+  getAttackTargets,
+  isAdjacent,
   moveUnit,
 } from "./units.js";
 import {
   canUpgradeCity,
+  captureCity,
   createCapital,
+  createEnemyCity,
   getUpgradeCost,
   STARTING_COINS,
   upgradeCity,
@@ -30,26 +37,41 @@ const emptySelection = document.querySelector("#selection-empty");
 const selectionDetails = document.querySelector("#selection-details");
 const unitDetails = document.querySelector("#unit-details");
 const unitPosition = document.querySelector("#unit-position");
+const unitHealth = document.querySelector("#unit-health");
 const unitStatus = document.querySelector("#unit-status");
 const cityDetails = document.querySelector("#city-details");
 const cityName = document.querySelector("#city-name");
 const cityLevel = document.querySelector("#city-level");
+const cityOwner = document.querySelector("#city-owner");
 const cityIncome = document.querySelector("#city-income");
 const upgradeCityButton = document.querySelector("#upgrade-city");
+const enemyDetails = document.querySelector("#enemy-details");
+const enemyPosition = document.querySelector("#enemy-position");
+const enemyHealth = document.querySelector("#enemy-health");
+const resultDetails = document.querySelector("#result-details");
+const resultIcon = document.querySelector("#result-icon");
+const resultTitle = document.querySelector("#result-title");
+const resultMessage = document.querySelector("#result-message");
+const restartGameButton = document.querySelector("#restart-game");
 const terrainName = document.querySelector("#terrain-name");
 const terrainSwatch = document.querySelector("#terrain-swatch");
 const tileCoordinates = document.querySelector("#tile-coordinates");
 
 let mapTiles = generateMap();
 let capital = createCapital(mapTiles);
-let scout = createScout(mapTiles, capital);
+let enemyCity = createEnemyCity(mapTiles, capital);
+let scout = createScout(mapTiles, capital, [enemyCity]);
+let enemyGuard = createGuard(enemyCity);
 let turn = 1;
 let coins = STARTING_COINS;
+let gameResult = null;
 let selectedTile = null;
 let hoveredTile = null;
 let unitSelected = false;
 let availableMoves = [];
 let availableMoveKeys = new Set();
+let attackTargets = [];
+let attackTargetKeys = new Set();
 let layout = null;
 
 function tileKey(tile) {
@@ -66,6 +88,22 @@ function scoutTile() {
 
 function capitalTile() {
   return findTile(mapTiles, capital.x, capital.y);
+}
+
+function enemyCityTile() {
+  return findTile(mapTiles, enemyCity.x, enemyCity.y);
+}
+
+function enemyGuardAlive() {
+  return enemyGuard.health > 0;
+}
+
+function controlledCities() {
+  return enemyCity.owner === "player" ? [capital, enemyCity] : [capital];
+}
+
+function totalIncome() {
+  return controlledCities().reduce((sum, city) => sum + city.income, 0);
 }
 
 function calculateLayout(width, height) {
@@ -183,6 +221,24 @@ function drawMoveMarker(path, position) {
   context.fill();
 }
 
+function drawAttackMarker(path, position) {
+  context.fillStyle = "rgb(209 82 67 / 34%)";
+  context.fill(path);
+  context.strokeStyle = "#ef8c79";
+  context.lineWidth = Math.max(3, layout.tileWidth * 0.045);
+  context.stroke(path);
+
+  context.beginPath();
+  context.moveTo(position.x - layout.tileWidth * 0.055, position.y + layout.tileHeight * 0.36);
+  context.lineTo(position.x + layout.tileWidth * 0.055, position.y + layout.tileHeight * 0.64);
+  context.moveTo(position.x + layout.tileWidth * 0.055, position.y + layout.tileHeight * 0.36);
+  context.lineTo(position.x - layout.tileWidth * 0.055, position.y + layout.tileHeight * 0.64);
+  context.strokeStyle = "#ffe0d8";
+  context.lineWidth = Math.max(2, layout.tileWidth * 0.025);
+  context.lineCap = "round";
+  context.stroke();
+}
+
 function drawTile(tile) {
   const position = tilePosition(tile);
   const path = diamondPath(position);
@@ -190,6 +246,7 @@ function drawTile(tile) {
   const selected = isSameTile(tile, selectedTile);
   const hovered = isSameTile(tile, hoveredTile);
   const available = availableMoveKeys.has(tileKey(tile));
+  const attackable = attackTargetKeys.has(tileKey(tile));
 
   context.fillStyle = terrain.edge;
   context.fill(path);
@@ -206,6 +263,7 @@ function drawTile(tile) {
 
   drawTerrainDetail(position, tile);
   if (available) drawMoveMarker(path, position);
+  if (attackable) drawAttackMarker(path, position);
 
   if (hovered || selected) {
     context.strokeStyle = selected ? "#ffe3a1" : "rgb(255 255 255 / 65%)";
@@ -213,7 +271,12 @@ function drawTile(tile) {
     context.stroke(path);
   }
 
-  if (selected && !isSameTile(tile, scout) && !isSameTile(tile, capital)) {
+  if (
+    selected &&
+    !isSameTile(tile, scout) &&
+    !isSameTile(tile, capital) &&
+    !isSameTile(tile, enemyCity)
+  ) {
     context.beginPath();
     context.arc(
       position.x,
@@ -227,12 +290,13 @@ function drawTile(tile) {
   }
 }
 
-function drawCapital() {
-  const tile = capitalTile();
+function drawCity(city) {
+  const tile = findTile(mapTiles, city.x, city.y);
   const position = tilePosition(tile);
   const centerY = position.y + layout.tileHeight * 0.42;
   const size = Math.max(8, layout.tileWidth * 0.15);
-  const towerCount = Math.min(capital.level, 3);
+  const towerCount = Math.min(city.level, 3);
+  const enemyOwned = city.owner === "enemy";
 
   context.save();
 
@@ -249,15 +313,15 @@ function drawCapital() {
   context.fillStyle = "rgb(7 19 14 / 34%)";
   context.fill();
 
-  if (isSameTile(selectedTile, capital) && !isSameTile(scout, capital)) {
+  if (isSameTile(selectedTile, city) && !isSameTile(scout, city)) {
     context.beginPath();
     context.arc(position.x, centerY, size + 7, 0, Math.PI * 2);
-    context.strokeStyle = "#fff0bd";
+    context.strokeStyle = enemyOwned ? "#f5a08d" : "#fff0bd";
     context.lineWidth = 3;
     context.stroke();
   }
 
-  context.fillStyle = "#d8cba3";
+  context.fillStyle = enemyOwned ? "#a98f86" : "#d8cba3";
   context.fillRect(
     position.x - size,
     centerY - size * 0.16,
@@ -267,7 +331,7 @@ function drawCapital() {
 
   for (let index = 0; index < towerCount; index += 1) {
     const offset = (index - (towerCount - 1) / 2) * size * 0.72;
-    context.fillStyle = "#eee2bd";
+    context.fillStyle = enemyOwned ? "#c9b3aa" : "#eee2bd";
     context.fillRect(
       position.x + offset - size * 0.28,
       centerY - size * 0.62,
@@ -279,7 +343,7 @@ function drawCapital() {
     context.lineTo(position.x + offset + size * 0.42, centerY - size * 0.55);
     context.lineTo(position.x + offset - size * 0.42, centerY - size * 0.55);
     context.closePath();
-    context.fillStyle = "#79563a";
+    context.fillStyle = enemyOwned ? "#673c3a" : "#79563a";
     context.fill();
   }
 
@@ -288,10 +352,10 @@ function drawCapital() {
   context.lineTo(position.x + size * 0.25, centerY + size * 0.68);
   context.lineTo(position.x - size * 0.25, centerY + size * 0.68);
   context.closePath();
-  context.fillStyle = "#59412f";
+  context.fillStyle = enemyOwned ? "#533130" : "#59412f";
   context.fill();
 
-  context.strokeStyle = "#f7e9bd";
+  context.strokeStyle = enemyOwned ? "#e6c0b7" : "#f7e9bd";
   context.lineWidth = Math.max(1.5, size * 0.1);
   context.strokeRect(
     position.x - size,
@@ -300,6 +364,18 @@ function drawCapital() {
     size * 0.85,
   );
   context.restore();
+}
+
+function drawHealthBar(position, centerY, radius, unit, color) {
+  const width = radius * 1.8;
+  const height = Math.max(3, radius * 0.22);
+  const x = position.x - width / 2;
+  const y = centerY - radius - height - 4;
+
+  context.fillStyle = "rgb(25 22 19 / 70%)";
+  context.fillRect(x, y, width, height);
+  context.fillStyle = color;
+  context.fillRect(x, y, width * (unit.health / unit.maxHealth), height);
 }
 
 function drawScout() {
@@ -356,6 +432,66 @@ function drawScout() {
   context.closePath();
   context.fillStyle = "#fff4c7";
   context.fill();
+  drawHealthBar(position, centerY, radius, scout, "#95c979");
+  context.restore();
+}
+
+function drawEnemyGuard() {
+  if (!enemyGuardAlive()) return;
+
+  const tile = enemyCityTile();
+  const position = tilePosition(tile);
+  const centerY = position.y + layout.tileHeight * 0.4;
+  const radius = Math.max(9, layout.tileWidth * 0.17);
+
+  context.save();
+  context.beginPath();
+  context.ellipse(
+    position.x,
+    centerY + radius * 0.72,
+    radius * 0.95,
+    radius * 0.42,
+    0,
+    0,
+    Math.PI * 2,
+  );
+  context.fillStyle = "rgb(7 19 14 / 42%)";
+  context.fill();
+
+  if (isSameTile(selectedTile, enemyGuard)) {
+    context.beginPath();
+    context.arc(position.x, centerY, radius + 5, 0, Math.PI * 2);
+    context.strokeStyle = "#f5a08d";
+    context.lineWidth = 3;
+    context.stroke();
+  }
+
+  const gradient = context.createLinearGradient(
+    position.x,
+    centerY - radius,
+    position.x,
+    centerY + radius,
+  );
+  gradient.addColorStop(0, "#ca6a5b");
+  gradient.addColorStop(1, "#73332f");
+
+  context.beginPath();
+  context.arc(position.x, centerY, radius, 0, Math.PI * 2);
+  context.fillStyle = gradient;
+  context.fill();
+  context.strokeStyle = "#f3b0a1";
+  context.lineWidth = Math.max(2, radius * 0.13);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(position.x, centerY - radius * 0.5);
+  context.lineTo(position.x + radius * 0.48, centerY);
+  context.lineTo(position.x, centerY + radius * 0.5);
+  context.lineTo(position.x - radius * 0.48, centerY);
+  context.closePath();
+  context.fillStyle = "#ffe1d9";
+  context.fill();
+  drawHealthBar(position, centerY, radius, enemyGuard, "#df7765");
   context.restore();
 }
 
@@ -365,12 +501,24 @@ function updateCanvasState() {
   canvas.dataset.unitY = String(scout.y);
   canvas.dataset.unitMoved = String(scout.hasMoved);
   canvas.dataset.availableMoves = availableMoves.map(tileKey).join(",");
+  canvas.dataset.attackTargets = attackTargets.map(tileKey).join(",");
   canvas.dataset.cityX = String(capital.x);
   canvas.dataset.cityY = String(capital.y);
   canvas.dataset.cityLevel = String(capital.level);
   canvas.dataset.cityIncome = String(capital.income);
   canvas.dataset.coins = String(coins);
   canvas.dataset.upgradeCost = String(getUpgradeCost(capital));
+  canvas.dataset.enemyCityX = String(enemyCity.x);
+  canvas.dataset.enemyCityY = String(enemyCity.y);
+  canvas.dataset.enemyCityOwner = enemyCity.owner;
+  canvas.dataset.playerHealth = String(scout.health);
+  canvas.dataset.enemyHealth = String(enemyGuard.health);
+  canvas.dataset.enemyAlive = String(enemyGuardAlive());
+  canvas.dataset.result = gameResult ?? "playing";
+  canvas.dataset.passableTiles = mapTiles
+    .filter((tile) => tile.terrain !== "water")
+    .map(tileKey)
+    .join(",");
 }
 
 function updateEconomyDisplay() {
@@ -395,8 +543,10 @@ function render() {
   context.fillRect(0, 0, layout.width, layout.height);
 
   mapTiles.forEach(drawTile);
-  drawCapital();
+  drawCity(capital);
+  drawCity(enemyCity);
   drawScout();
+  drawEnemyGuard();
   updateCanvasState();
 }
 
@@ -441,15 +591,17 @@ function hideInformationPanels() {
   selectionDetails.hidden = true;
   unitDetails.hidden = true;
   cityDetails.hidden = true;
+  enemyDetails.hidden = true;
+  resultDetails.hidden = true;
 }
 
 function showEmptyState() {
   hideInformationPanels();
   emptySelection.hidden = false;
-  mapInstruction.textContent = "WYBIERZ JEDNOSTKĘ LUB STOLICĘ";
+  mapInstruction.textContent = "DOTRZYJ DO WROGIEGO MIASTA";
   canvas.setAttribute(
     "aria-label",
-    `Tura ${turn}. Masz ${coins} monet. Stolica jest na polu ${capital.x + 1}, ${capital.y + 1}, a zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}.`,
+    `Tura ${turn}. Zwiadowca ma ${scout.health} z ${scout.maxHealth} punktów życia. Wrogie miasto jest na polu ${enemyCity.x + 1}, ${enemyCity.y + 1}.`,
   );
 }
 
@@ -472,6 +624,7 @@ function showUnitSelection() {
   hideInformationPanels();
   unitDetails.hidden = false;
   unitPosition.textContent = `Pole ${scout.x + 1}, ${scout.y + 1}`;
+  unitHealth.textContent = `Życie ${scout.health}/${scout.maxHealth}`;
   unitStatus.classList.toggle("moved", scout.hasMoved);
 
   if (scout.hasMoved) {
@@ -488,40 +641,82 @@ function showUnitSelection() {
     .map((tile) => `${tile.x + 1}, ${tile.y + 1}`)
     .join("; ");
   const moveCount = availableMoves.length;
-  unitStatus.textContent = moveCount
-    ? `Gotowy do ruchu. Dostępne pola: ${moveCount}.`
-    : "Brak dostępnych pól ruchu.";
-  mapInstruction.textContent = moveCount
-    ? "WYBIERZ PODŚWIETLONE POLE"
-    : "BRAK DOSTĘPNEGO RUCHU";
+  const attackCount = attackTargets.length;
+  unitStatus.textContent = attackCount
+    ? `Gotowy. Pola ruchu: ${moveCount}. Cele ataku: ${attackCount}.`
+    : moveCount
+      ? `Gotowy do ruchu. Dostępne pola: ${moveCount}.`
+      : "Brak dostępnych pól ruchu.";
+  mapInstruction.textContent = attackCount
+    ? "WYBIERZ RUCH LUB CEL ATAKU"
+    : moveCount
+      ? "WYBIERZ PODŚWIETLONE POLE"
+      : "BRAK DOSTĘPNEGO RUCHU";
   canvas.setAttribute(
     "aria-label",
-    `Zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}. Dostępne pola: ${moveList || "brak"}.`,
+    `Zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}, życie ${scout.health} z ${scout.maxHealth}. Dostępne pola: ${moveList || "brak"}. Cele ataku: ${attackCount}.`,
   );
 }
 
-function showCitySelection() {
-  const cost = getUpgradeCost(capital);
+function showCitySelection(city) {
+  const cost = getUpgradeCost(city);
+  const isPlayerCapital = city === capital && city.owner === "player";
 
   hideInformationPanels();
   cityDetails.hidden = false;
-  cityName.textContent = capital.name;
-  cityLevel.textContent = `Poziom ${capital.level}`;
-  cityIncome.textContent = `Dochód: +${capital.income} monety na turę`;
+  cityName.textContent = city.name;
+  cityLevel.textContent = `Poziom ${city.level}`;
+  cityOwner.textContent = city.owner === "enemy" ? "Wrogie miasto" : "Twoje miasto";
+  cityIncome.textContent = `Dochód: +${city.income} monety na turę`;
   upgradeCityButton.textContent = `Rozwiń miasto — ${cost} monet`;
-  upgradeCityButton.disabled = !canUpgradeCity(capital, coins);
-  mapInstruction.textContent = "STOLICA";
+  upgradeCityButton.hidden = !isPlayerCapital;
+  upgradeCityButton.disabled = !isPlayerCapital || !canUpgradeCity(city, coins);
+  mapInstruction.textContent = city.owner === "enemy" ? "WROGIE MIASTO" : "MIASTO";
   canvas.setAttribute(
     "aria-label",
-    `${capital.name}, poziom ${capital.level}, pole ${capital.x + 1}, ${capital.y + 1}. Dochód ${capital.income} monety na turę. Rozwój kosztuje ${cost} monet.`,
+    `${city.name}, poziom ${city.level}, pole ${city.x + 1}, ${city.y + 1}. Właściciel: ${city.owner === "enemy" ? "przeciwnik" : "gracz"}.`,
   );
 }
 
+function showEnemySelection() {
+  hideInformationPanels();
+  enemyDetails.hidden = false;
+  enemyPosition.textContent = `Pole ${enemyGuard.x + 1}, ${enemyGuard.y + 1}`;
+  enemyHealth.textContent = `Życie ${enemyGuard.health}/${enemyGuard.maxHealth}`;
+  mapInstruction.textContent = isAdjacent(scout, enemyGuard)
+    ? "WYBIERZ ZWIADOWCĘ I ZAATAKUJ"
+    : "PODEJDŹ DO STRAŻNIKA";
+  canvas.setAttribute(
+    "aria-label",
+    `Strażnik na polu ${enemyGuard.x + 1}, ${enemyGuard.y + 1}. Życie ${enemyGuard.health} z ${enemyGuard.maxHealth}.`,
+  );
+}
+
+function showResult(result) {
+  hideInformationPanels();
+  resultDetails.hidden = false;
+  resultDetails.classList.toggle("defeat", result === "defeat");
+  resultIcon.textContent = result === "victory" ? "★" : "×";
+  resultTitle.textContent = result === "victory" ? "Zwycięstwo" : "Porażka";
+  resultMessage.textContent =
+    result === "victory"
+      ? "Kamienna Strażnica należy do Ciebie."
+      : "Zwiadowca poległ podczas oblężenia.";
+  mapInstruction.textContent = result === "victory" ? "MIASTO ZDOBYTE" : "KONIEC WYPRAWY";
+}
+
 function selectScout() {
+  if (gameResult) return;
   selectedTile = scoutTile();
   unitSelected = true;
-  availableMoves = getAvailableMoves(scout, mapTiles);
+  const blockedUnits = enemyGuardAlive() ? [enemyGuard] : [];
+  availableMoves = getAvailableMoves(scout, mapTiles, blockedUnits);
   availableMoveKeys = new Set(availableMoves.map(tileKey));
+  attackTargets = getAttackTargets(
+    scout,
+    enemyGuardAlive() ? [enemyGuard] : [],
+  );
+  attackTargetKeys = new Set(attackTargets.map(tileKey));
   showUnitSelection();
 }
 
@@ -530,20 +725,48 @@ function executeMove(destination) {
   selectedTile = destination;
   availableMoves = [];
   availableMoveKeys = new Set();
+  attackTargets = [];
+  attackTargetKeys = new Set();
+
+  if (isSameTile(destination, enemyCity) && !enemyGuardAlive()) {
+    enemyCity = captureCity(enemyCity);
+    gameResult = "victory";
+    endTurnButton.disabled = true;
+    showResult(gameResult);
+  } else {
+    showUnitSelection();
+  }
+}
+
+function executeAttack() {
+  const result = attackUnit(scout, enemyGuard);
+  scout = result.attacker;
+  enemyGuard = result.defender;
+  selectedTile = enemyGuardAlive() ? enemyCityTile() : scoutTile();
+  availableMoves = [];
+  availableMoveKeys = new Set();
+  attackTargets = [];
+  attackTargetKeys = new Set();
   showUnitSelection();
 }
 
 function resetGame() {
   mapTiles = generateMap(Date.now());
   capital = createCapital(mapTiles);
-  scout = createScout(mapTiles, capital);
+  enemyCity = createEnemyCity(mapTiles, capital);
+  scout = createScout(mapTiles, capital, [enemyCity]);
+  enemyGuard = createGuard(enemyCity);
   turn = 1;
   coins = STARTING_COINS;
+  gameResult = null;
   selectedTile = null;
   hoveredTile = null;
   unitSelected = false;
   availableMoves = [];
   availableMoveKeys = new Set();
+  attackTargets = [];
+  attackTargetKeys = new Set();
+  endTurnButton.disabled = false;
   turnNumber.textContent = String(turn);
   updateEconomyDisplay();
   showEmptyState();
@@ -572,21 +795,44 @@ canvas.addEventListener("pointerup", (event) => {
   const point = eventPoint(event);
   const tile = tileAtPoint(point.x, point.y);
   if (!tile) return;
+  if (gameResult) return;
 
   if (isSameTile(tile, scout)) {
     selectScout();
+  } else if (unitSelected && attackTargetKeys.has(tileKey(tile))) {
+    executeAttack();
   } else if (unitSelected && availableMoveKeys.has(tileKey(tile))) {
     executeMove(tile);
+  } else if (enemyGuardAlive() && isSameTile(tile, enemyGuard)) {
+    unitSelected = false;
+    availableMoves = [];
+    availableMoveKeys = new Set();
+    attackTargets = [];
+    attackTargetKeys = new Set();
+    selectedTile = enemyCityTile();
+    showEnemySelection();
   } else if (isSameTile(tile, capital)) {
     unitSelected = false;
     availableMoves = [];
     availableMoveKeys = new Set();
+    attackTargets = [];
+    attackTargetKeys = new Set();
     selectedTile = capitalTile();
-    showCitySelection();
+    showCitySelection(capital);
+  } else if (isSameTile(tile, enemyCity)) {
+    unitSelected = false;
+    availableMoves = [];
+    availableMoveKeys = new Set();
+    attackTargets = [];
+    attackTargetKeys = new Set();
+    selectedTile = enemyCityTile();
+    showCitySelection(enemyCity);
   } else {
     unitSelected = false;
     availableMoves = [];
     availableMoveKeys = new Set();
+    attackTargets = [];
+    attackTargetKeys = new Set();
     selectedTile = tile;
     showTerrainSelection(tile);
   }
@@ -595,14 +841,32 @@ canvas.addEventListener("pointerup", (event) => {
 });
 
 endTurnButton.addEventListener("click", () => {
+  if (gameResult) return;
+
+  scout = enemyStrike(enemyGuard, scout);
+  if (scout.health <= 0) {
+    gameResult = "defeat";
+    unitSelected = false;
+    availableMoves = [];
+    availableMoveKeys = new Set();
+    attackTargets = [];
+    attackTargetKeys = new Set();
+    endTurnButton.disabled = true;
+    showResult(gameResult);
+    render();
+    return;
+  }
+
   turn += 1;
-  coins += capital.income;
+  coins += totalIncome();
   scout = { ...scout, hasMoved: false };
   selectedTile = null;
   hoveredTile = null;
   unitSelected = false;
   availableMoves = [];
   availableMoveKeys = new Set();
+  attackTargets = [];
+  attackTargetKeys = new Set();
   turnNumber.textContent = String(turn);
   updateEconomyDisplay();
   showEmptyState();
@@ -616,9 +880,11 @@ upgradeCityButton.addEventListener("click", () => {
   capital = result.city;
   coins = result.coins;
   updateEconomyDisplay();
-  showCitySelection();
+  showCitySelection(capital);
   render();
 });
+
+restartGameButton.addEventListener("click", resetGame);
 
 updateEconomyDisplay();
 showEmptyState();
