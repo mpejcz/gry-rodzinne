@@ -553,6 +553,34 @@ button:disabled {
   font-size: 0.78rem;
 }
 
+.save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  border: 1px solid #2f4538;
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: rgb(18 33 25 / 75%);
+}
+
+.save-bar p {
+  margin: 0;
+  color: #8fa398;
+  font-size: 0.8rem;
+}
+
+.save-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-actions button {
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
 @media (max-width: 760px) {
   .game-shell {
     width: min(100% - 20px, 640px);
@@ -638,6 +666,22 @@ button:disabled {
 
   .game-footer {
     justify-content: center;
+  }
+
+  .save-bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .save-bar p {
+    text-align: center;
+  }
+
+  .save-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .footer-tip {

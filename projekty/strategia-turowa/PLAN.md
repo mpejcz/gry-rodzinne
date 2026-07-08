@@ -47,9 +47,17 @@
 - [x] atak po znalezieniu się obok gracza;
 - [x] komunikat o działaniu przeciwnika.
 
+## Etap 6 — zapis rozgrywki
+
+- [x] wersjonowany format zapisu;
+- [x] walidacja danych przed wczytaniem;
+- [x] automatyczny zapis po zmianie stanu;
+- [x] ręczny zapis;
+- [x] wczytywanie pełnej rozgrywki;
+- [x] komunikaty o stanie zapisu.
+
 ## Późniejsze etapy
 
-- zapis stanu gry;
 - dopracowanie oprawy i interfejsu.
 
 ## Definicja ukończenia etapu 1
@@ -71,3 +79,7 @@ Etap jest ukończony, gdy gracz może dotrzeć do wrogiego miasta, walczyć ze s
 ## Definicja ukończenia etapu 5
 
 Etap jest ukończony, gdy strażnik po zakończeniu tury samodzielnie zbliża się najkrótszą dostępną drogą do zwiadowcy, a po osiągnięciu sąsiedniego pola atakuje go w kolejnych turach.
+
+## Definicja ukończenia etapu 6
+
+Etap jest ukończony, gdy gracz może zapisać rozgrywkę, rozpocząć inny układ mapy, a następnie odtworzyć mapę, jednostki, miasta, ekonomię, turę i wynik bez utraty stanu.

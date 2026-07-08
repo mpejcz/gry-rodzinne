@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 5: przeciwnik sterowany przez AI."
+      content="Prototyp rodzinnej strategii turowej — etap 6: zapis i wczytywanie gry."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,7 +21,7 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 5</span>
+          <span class="stage-badge">Etap 6</span>
           <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
           <span class="coin-badge" aria-live="polite">
             <i aria-hidden="true">●</i> <strong id="coin-count">3</strong>
@@ -115,6 +115,14 @@
         <span>Złote pola: ruch • Czerwone pola: atak</span>
         <span class="footer-tip">Pokonaj strażnika i wejdź do wrogiego miasta</span>
       </footer>
+
+      <section class="save-bar" aria-label="Zapis gry">
+        <p id="save-status" aria-live="polite">Gra nie została jeszcze zapisana.</p>
+        <div class="save-actions">
+          <button id="save-game" class="secondary-button" type="button">Zapisz grę</button>
+          <button id="load-game" class="secondary-button" type="button" disabled>Wczytaj grę</button>
+        </div>
+      </section>
     </main>
 
     <script type="module" src="./src/game.js"></script>

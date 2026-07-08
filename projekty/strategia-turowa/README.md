@@ -4,7 +4,7 @@ Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi gr
 
 ## Aktualny stan
 
-Etap 5 zawiera:
+Etap 6 zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
@@ -27,7 +27,11 @@ Etap 5 zawiera:
 - automatyczną turę przeciwnika;
 - wyznaczanie najkrótszej drogi po lądzie;
 - pościg strażnika za zwiadowcą;
-- informację o ruchu lub ataku przeciwnika.
+- informację o ruchu lub ataku przeciwnika;
+- automatyczny zapis po ruchu, ataku, turze i rozwoju miasta;
+- ręczny przycisk zapisu;
+- wczytywanie pełnego stanu rozgrywki;
+- wersjonowanie i walidację zapisanych danych.
 
 ## Uruchomienie
 
@@ -52,4 +56,5 @@ Projekt nie wymaga instalowania zależności ani kompilacji.
 - `src/map.js` — rodzaje terenu i generator mapy;
 - `src/units.js` — jednostki i reguły ruchu;
 - `src/cities.js` — stolica, ceny rozwoju i gospodarka;
+- `src/storage.js` — wersjonowanie, walidacja i zapis stanu;
 - `src/game.js` — stan tury, rysowanie oraz sterowanie.

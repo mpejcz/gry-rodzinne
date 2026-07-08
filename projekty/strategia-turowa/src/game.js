@@ -25,6 +25,11 @@ import {
   STARTING_COINS,
   upgradeCity,
 } from "./cities.js";
+import {
+  hasSavedGame,
+  loadGameState,
+  saveGameState,
+} from "./storage.js";
 
 const canvas = document.querySelector("#game-map");
 const context = canvas.getContext("2d");
@@ -55,6 +60,9 @@ const resultIcon = document.querySelector("#result-icon");
 const resultTitle = document.querySelector("#result-title");
 const resultMessage = document.querySelector("#result-message");
 const restartGameButton = document.querySelector("#restart-game");
+const saveGameButton = document.querySelector("#save-game");
+const loadGameButton = document.querySelector("#load-game");
+const saveStatus = document.querySelector("#save-status");
 const terrainName = document.querySelector("#terrain-name");
 const terrainSwatch = document.querySelector("#terrain-swatch");
 const tileCoordinates = document.querySelector("#tile-coordinates");
@@ -535,6 +543,101 @@ function updateEconomyDisplay() {
   coinCount.textContent = String(coins);
 }
 
+function currentGameState() {
+  return {
+    mapTiles,
+    capital,
+    enemyCity,
+    scout,
+    enemyGuard,
+    turn,
+    coins,
+    gameResult,
+    lastEnemyAction,
+  };
+}
+
+function setSaveStatus(message, state) {
+  saveStatus.textContent = message;
+  saveStatus.dataset.state = state;
+}
+
+function savedGameExists() {
+  try {
+    return hasSavedGame();
+  } catch {
+    return false;
+  }
+}
+
+function refreshSaveControls() {
+  const available = savedGameExists();
+  loadGameButton.disabled = !available;
+  setSaveStatus(
+    available
+      ? "Dostępny jest zapis poprzedniej rozgrywki."
+      : "Gra nie została jeszcze zapisana.",
+    available ? "available" : "empty",
+  );
+}
+
+function persistGame(message = "Gra zapisana automatycznie.") {
+  try {
+    saveGameState(currentGameState());
+    loadGameButton.disabled = false;
+    setSaveStatus(message, "saved");
+  } catch {
+    setSaveStatus("Nie udało się zapisać gry.", "error");
+  }
+}
+
+function restoreGame() {
+  let payload = null;
+  try {
+    payload = loadGameState();
+  } catch {
+    payload = null;
+  }
+  if (!payload) {
+    loadGameButton.disabled = true;
+    setSaveStatus("Zapis jest nieprawidłowy lub nie istnieje.", "error");
+    return;
+  }
+
+  ({
+    mapTiles,
+    capital,
+    enemyCity,
+    scout,
+    enemyGuard,
+    turn,
+    coins,
+    gameResult,
+    lastEnemyAction,
+  } = payload.state);
+
+  selectedTile = null;
+  hoveredTile = null;
+  unitSelected = false;
+  availableMoves = [];
+  availableMoveKeys = new Set();
+  attackTargets = [];
+  attackTargetKeys = new Set();
+  endTurnButton.disabled = Boolean(gameResult);
+  turnNumber.textContent = String(turn);
+  updateEconomyDisplay();
+
+  if (gameResult) {
+    showResult(gameResult);
+  } else {
+    showEmptyState("Wczytano zapisaną rozgrywkę.");
+    mapInstruction.textContent = "GRA WCZYTANA";
+  }
+
+  render();
+  setSaveStatus("Rozgrywka została wczytana.", "loaded");
+}
+
 function render() {
   if (!layout) return;
   context.clearRect(0, 0, layout.width, layout.height);
@@ -752,6 +855,7 @@ function executeMove(destination) {
   } else {
     showUnitSelection();
   }
+  persistGame();
 }
 
 function executeAttack() {
@@ -764,6 +868,7 @@ function executeAttack() {
   attackTargets = [];
   attackTargetKeys = new Set();
   showUnitSelection();
+  persistGame();
 }
 
 function runEnemyTurn() {
@@ -811,6 +916,14 @@ function resetGame() {
   updateEconomyDisplay();
   showEmptyState();
   render();
+  const savedGameAvailable = savedGameExists();
+  loadGameButton.disabled = !savedGameAvailable;
+  setSaveStatus(
+    savedGameAvailable
+      ? "Nowa gra rozpoczęta. Poprzedni zapis nadal można wczytać."
+      : "Nowa gra rozpoczęta. Zapis pojawi się po pierwszej akcji.",
+    "unsaved",
+  );
 }
 
 canvas.addEventListener("pointermove", (event) => {
@@ -894,6 +1007,7 @@ endTurnButton.addEventListener("click", () => {
     endTurnButton.disabled = true;
     showResult(gameResult);
     render();
+    persistGame();
     return;
   }
 
@@ -911,6 +1025,7 @@ endTurnButton.addEventListener("click", () => {
   updateEconomyDisplay();
   showEmptyState(enemyMessage);
   render();
+  persistGame();
 });
 
 newMapButton.addEventListener("click", resetGame);
@@ -922,11 +1037,17 @@ upgradeCityButton.addEventListener("click", () => {
   updateEconomyDisplay();
   showCitySelection(capital);
   render();
+  persistGame();
 });
 
 restartGameButton.addEventListener("click", resetGame);
+saveGameButton.addEventListener("click", () => {
+  persistGame("Rozgrywka została zapisana ręcznie.");
+});
+loadGameButton.addEventListener("click", restoreGame);
 
 updateEconomyDisplay();
 showEmptyState();
+refreshSaveControls();
 const resizeObserver = new ResizeObserver(resizeCanvas);
 resizeObserver.observe(mapFrame);
