@@ -12,11 +12,13 @@
 
 ## Etap 2 — jednostka i tury
 
-- [ ] pierwsza jednostka gracza;
-- [ ] wskazywanie dostępnych pól ruchu;
-- [ ] wykonanie ruchu;
-- [ ] przycisk zakończenia tury;
-- [ ] licznik tur.
+- [x] pierwsza jednostka gracza;
+- [x] wskazywanie dostępnych pól ruchu;
+- [x] wykonanie ruchu;
+- [x] blokada ruchu przez wodę;
+- [x] jeden ruch jednostki na turę;
+- [x] przycisk zakończenia tury;
+- [x] licznik tur.
 
 ## Późniejsze etapy
 
@@ -29,3 +31,7 @@
 ## Definicja ukończenia etapu 1
 
 Etap jest ukończony, gdy mapa prawidłowo skaluje się na komputerze i telefonie, a użytkownik może wygenerować nową mapę oraz wybrać dowolne pole, poznając jego teren i współrzędne.
+
+## Definicja ukończenia etapu 2
+
+Etap jest ukończony, gdy gracz może wybrać zwiadowcę, zobaczyć legalne pola, wykonać jeden ruch bez wchodzenia do wody, zakończyć turę i ponownie poruszyć jednostkę w następnej turze.

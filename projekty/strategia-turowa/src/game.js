@@ -4,28 +4,49 @@ import {
   MAP_ROWS,
   TERRAIN,
 } from "./map.js";
+import {
+  createScout,
+  findTile,
+  getAvailableMoves,
+  moveUnit,
+} from "./units.js";
 
 const canvas = document.querySelector("#game-map");
 const context = canvas.getContext("2d");
 const mapFrame = document.querySelector(".map-frame");
 const newMapButton = document.querySelector("#new-map");
+const endTurnButton = document.querySelector("#end-turn");
+const turnNumber = document.querySelector("#turn-number");
+const mapInstruction = document.querySelector("#map-instruction");
 const emptySelection = document.querySelector("#selection-empty");
 const selectionDetails = document.querySelector("#selection-details");
+const unitDetails = document.querySelector("#unit-details");
+const unitPosition = document.querySelector("#unit-position");
+const unitStatus = document.querySelector("#unit-status");
 const terrainName = document.querySelector("#terrain-name");
 const terrainSwatch = document.querySelector("#terrain-swatch");
 const tileCoordinates = document.querySelector("#tile-coordinates");
 
 let mapTiles = generateMap();
+let scout = createScout(mapTiles);
+let turn = 1;
 let selectedTile = null;
 let hoveredTile = null;
+let unitSelected = false;
+let availableMoves = [];
+let availableMoveKeys = new Set();
 let layout = null;
 
 function tileKey(tile) {
-  return `${tile.x}:${tile.y}`;
+  return tile ? `${tile.x}:${tile.y}` : "";
 }
 
 function isSameTile(first, second) {
   return first && second && first.x === second.x && first.y === second.y;
+}
+
+function scoutTile() {
+  return findTile(mapTiles, scout.x, scout.y);
 }
 
 function calculateLayout(width, height) {
@@ -124,12 +145,32 @@ function drawTerrainDetail(position, tile) {
   if (tile.terrain === "mountain") drawMountainDetail(position, tile);
 }
 
+function drawMoveMarker(path, position) {
+  context.fillStyle = "rgb(255 225 151 / 30%)";
+  context.fill(path);
+  context.strokeStyle = "#f2d17e";
+  context.lineWidth = Math.max(2, layout.tileWidth * 0.035);
+  context.stroke(path);
+
+  context.beginPath();
+  context.arc(
+    position.x,
+    position.y + layout.tileHeight / 2,
+    Math.max(2.5, layout.tileWidth * 0.04),
+    0,
+    Math.PI * 2,
+  );
+  context.fillStyle = "#fff0bd";
+  context.fill();
+}
+
 function drawTile(tile) {
   const position = tilePosition(tile);
   const path = diamondPath(position);
   const terrain = TERRAIN[tile.terrain];
   const selected = isSameTile(tile, selectedTile);
   const hovered = isSameTile(tile, hoveredTile);
+  const available = availableMoveKeys.has(tileKey(tile));
 
   context.fillStyle = terrain.edge;
   context.fill(path);
@@ -145,6 +186,7 @@ function drawTile(tile) {
   context.stroke(path);
 
   drawTerrainDetail(position, tile);
+  if (available) drawMoveMarker(path, position);
 
   if (hovered || selected) {
     context.strokeStyle = selected ? "#ffe3a1" : "rgb(255 255 255 / 65%)";
@@ -152,7 +194,7 @@ function drawTile(tile) {
     context.stroke(path);
   }
 
-  if (selected) {
+  if (selected && !isSameTile(tile, scout)) {
     context.beginPath();
     context.arc(
       position.x,
@@ -164,6 +206,71 @@ function drawTile(tile) {
     context.fillStyle = "#fff4c7";
     context.fill();
   }
+}
+
+function drawScout() {
+  const tile = scoutTile();
+  const position = tilePosition(tile);
+  const centerY = position.y + layout.tileHeight * 0.4;
+  const radius = Math.max(9, layout.tileWidth * 0.17);
+
+  context.save();
+  context.globalAlpha = scout.hasMoved ? 0.65 : 1;
+
+  context.beginPath();
+  context.ellipse(
+    position.x,
+    centerY + radius * 0.72,
+    radius * 0.95,
+    radius * 0.42,
+    0,
+    0,
+    Math.PI * 2,
+  );
+  context.fillStyle = "rgb(7 19 14 / 38%)";
+  context.fill();
+
+  if (unitSelected) {
+    context.beginPath();
+    context.arc(position.x, centerY, radius + 5, 0, Math.PI * 2);
+    context.strokeStyle = "#fff0bd";
+    context.lineWidth = 3;
+    context.stroke();
+  }
+
+  const tokenGradient = context.createLinearGradient(
+    position.x,
+    centerY - radius,
+    position.x,
+    centerY + radius,
+  );
+  tokenGradient.addColorStop(0, "#e4b65d");
+  tokenGradient.addColorStop(1, "#9a622c");
+
+  context.beginPath();
+  context.arc(position.x, centerY, radius, 0, Math.PI * 2);
+  context.fillStyle = tokenGradient;
+  context.fill();
+  context.strokeStyle = "#ffe5a3";
+  context.lineWidth = Math.max(2, radius * 0.13);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(position.x, centerY - radius * 0.52);
+  context.lineTo(position.x + radius * 0.42, centerY + radius * 0.35);
+  context.lineTo(position.x - radius * 0.42, centerY + radius * 0.35);
+  context.closePath();
+  context.fillStyle = "#fff4c7";
+  context.fill();
+  context.restore();
+}
+
+function updateCanvasState() {
+  canvas.dataset.turn = String(turn);
+  canvas.dataset.unitX = String(scout.x);
+  canvas.dataset.unitY = String(scout.y);
+  canvas.dataset.unitMoved = String(scout.hasMoved);
+  canvas.dataset.availableMoves = availableMoves.map(tileKey).join(",");
 }
 
 function render() {
@@ -184,6 +291,8 @@ function render() {
   context.fillRect(0, 0, layout.width, layout.height);
 
   mapTiles.forEach(drawTile);
+  drawScout();
+  updateCanvasState();
 }
 
 function resizeCanvas() {
@@ -222,18 +331,97 @@ function eventPoint(event) {
   };
 }
 
-function showSelection(tile) {
+function hideInformationPanels() {
+  emptySelection.hidden = true;
+  selectionDetails.hidden = true;
+  unitDetails.hidden = true;
+}
+
+function showEmptyState() {
+  hideInformationPanels();
+  emptySelection.hidden = false;
+  mapInstruction.textContent = "WYBIERZ ZWIADOWCĘ";
+  canvas.setAttribute(
+    "aria-label",
+    `Tura ${turn}. Zwiadowca czeka na polu ${scout.x + 1}, ${scout.y + 1}.`,
+  );
+}
+
+function showTerrainSelection(tile) {
   const terrain = TERRAIN[tile.terrain];
 
-  emptySelection.hidden = true;
+  hideInformationPanels();
   selectionDetails.hidden = false;
   terrainName.textContent = terrain.name;
   terrainSwatch.style.backgroundColor = terrain.color;
   tileCoordinates.textContent = `Pole ${tile.x + 1}, ${tile.y + 1}`;
+  mapInstruction.textContent = "WYBRANE POLE";
   canvas.setAttribute(
     "aria-label",
     `Wybrane pole ${tile.x + 1}, ${tile.y + 1}: ${terrain.name}.`,
   );
+}
+
+function showUnitSelection() {
+  hideInformationPanels();
+  unitDetails.hidden = false;
+  unitPosition.textContent = `Pole ${scout.x + 1}, ${scout.y + 1}`;
+  unitStatus.classList.toggle("moved", scout.hasMoved);
+
+  if (scout.hasMoved) {
+    unitStatus.textContent = "Ruch wykorzystany. Zakończ turę, aby jednostka mogła ruszyć ponownie.";
+    mapInstruction.textContent = "ZAKOŃCZ TURĘ";
+    canvas.setAttribute(
+      "aria-label",
+      `Zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}. Ruch w turze ${turn} został wykorzystany.`,
+    );
+    return;
+  }
+
+  const moveList = availableMoves
+    .map((tile) => `${tile.x + 1}, ${tile.y + 1}`)
+    .join("; ");
+  const moveCount = availableMoves.length;
+  unitStatus.textContent = moveCount
+    ? `Gotowy do ruchu. Dostępne pola: ${moveCount}.`
+    : "Brak dostępnych pól ruchu.";
+  mapInstruction.textContent = moveCount
+    ? "WYBIERZ PODŚWIETLONE POLE"
+    : "BRAK DOSTĘPNEGO RUCHU";
+  canvas.setAttribute(
+    "aria-label",
+    `Zwiadowca na polu ${scout.x + 1}, ${scout.y + 1}. Dostępne pola: ${moveList || "brak"}.`,
+  );
+}
+
+function selectScout() {
+  selectedTile = scoutTile();
+  unitSelected = true;
+  availableMoves = getAvailableMoves(scout, mapTiles);
+  availableMoveKeys = new Set(availableMoves.map(tileKey));
+  showUnitSelection();
+}
+
+function executeMove(destination) {
+  scout = moveUnit(scout, destination);
+  selectedTile = destination;
+  availableMoves = [];
+  availableMoveKeys = new Set();
+  showUnitSelection();
+}
+
+function resetGame() {
+  mapTiles = generateMap(Date.now());
+  scout = createScout(mapTiles);
+  turn = 1;
+  selectedTile = null;
+  hoveredTile = null;
+  unitSelected = false;
+  availableMoves = [];
+  availableMoveKeys = new Set();
+  turnNumber.textContent = String(turn);
+  showEmptyState();
+  render();
 }
 
 canvas.addEventListener("pointermove", (event) => {
@@ -241,7 +429,7 @@ canvas.addEventListener("pointermove", (event) => {
   const point = eventPoint(event);
   const nextHoveredTile = tileAtPoint(point.x, point.y);
 
-  if (tileKey(nextHoveredTile ?? {}) !== tileKey(hoveredTile ?? {})) {
+  if (tileKey(nextHoveredTile) !== tileKey(hoveredTile)) {
     hoveredTile = nextHoveredTile;
     canvas.style.cursor = hoveredTile ? "pointer" : "crosshair";
     render();
@@ -259,23 +447,36 @@ canvas.addEventListener("pointerup", (event) => {
   const tile = tileAtPoint(point.x, point.y);
   if (!tile) return;
 
-  selectedTile = tile;
-  showSelection(tile);
+  if (isSameTile(tile, scout)) {
+    selectScout();
+  } else if (unitSelected && availableMoveKeys.has(tileKey(tile))) {
+    executeMove(tile);
+  } else {
+    unitSelected = false;
+    availableMoves = [];
+    availableMoveKeys = new Set();
+    selectedTile = tile;
+    showTerrainSelection(tile);
+  }
+
   render();
 });
 
-newMapButton.addEventListener("click", () => {
-  mapTiles = generateMap(Date.now());
+endTurnButton.addEventListener("click", () => {
+  turn += 1;
+  scout = { ...scout, hasMoved: false };
   selectedTile = null;
   hoveredTile = null;
-  emptySelection.hidden = false;
-  selectionDetails.hidden = true;
-  canvas.setAttribute(
-    "aria-label",
-    "Izometryczna mapa. Kliknij lub dotknij pola, aby je wybrać.",
-  );
+  unitSelected = false;
+  availableMoves = [];
+  availableMoveKeys = new Set();
+  turnNumber.textContent = String(turn);
+  showEmptyState();
   render();
 });
 
+newMapButton.addEventListener("click", resetGame);
+
+showEmptyState();
 const resizeObserver = new ResizeObserver(resizeCanvas);
 resizeObserver.observe(mapFrame);

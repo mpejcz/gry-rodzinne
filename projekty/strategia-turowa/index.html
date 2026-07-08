@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#17261f" />
     <meta
       name="description"
-      content="Prototyp rodzinnej strategii turowej — etap 1: mapa i wybieranie pól."
+      content="Prototyp rodzinnej strategii turowej — etap 2: zwiadowca, ruch i tury."
     />
     <title>Kraina Tur — prototyp strategii</title>
     <link rel="stylesheet" href="./style.css" />
@@ -21,8 +21,10 @@
         </div>
 
         <div class="topbar-actions">
-          <span class="stage-badge">Etap 1</span>
-          <button id="new-map" type="button">Nowa mapa</button>
+          <span class="stage-badge">Etap 2</span>
+          <span class="turn-badge">Tura <strong id="turn-number">1</strong></span>
+          <button id="new-map" class="secondary-button" type="button">Nowa mapa</button>
+          <button id="end-turn" type="button">Zakończ turę</button>
         </div>
       </header>
 
@@ -33,14 +35,25 @@
             role="img"
             aria-label="Izometryczna mapa. Kliknij lub dotknij pola, aby je wybrać."
           ></canvas>
-          <div class="map-label">NIEZNANA KRAINA</div>
+          <div id="map-instruction" class="map-label">WYBIERZ ZWIADOWCĘ</div>
         </div>
 
         <aside class="info-panel" aria-live="polite">
-          <p class="eyebrow">Wybrane pole</p>
+          <p class="eyebrow">Informacje</p>
           <div id="selection-empty" class="empty-selection">
-            <span class="selection-icon">◇</span>
-            <p>Dotknij dowolnego pola mapy, aby poznać jego teren i współrzędne.</p>
+            <span class="selection-icon">▲</span>
+            <p>Wybierz zwiadowcę na mapie, aby zobaczyć dostępne pola ruchu.</p>
+          </div>
+
+          <div id="unit-details" class="unit-details" hidden>
+            <div class="unit-card">
+              <div class="unit-portrait" aria-hidden="true">▲</div>
+              <div>
+                <strong>Zwiadowca</strong>
+                <span id="unit-position">Pole 1, 1</span>
+              </div>
+            </div>
+            <p id="unit-status" class="unit-status">Gotowy do ruchu</p>
           </div>
 
           <div id="selection-details" class="selection-details" hidden>
@@ -61,8 +74,8 @@
       </section>
 
       <footer class="game-footer">
-        <span>Mapa 10 × 10 pól</span>
-        <span class="footer-tip">Kliknij pole • „Nowa mapa” tworzy kolejny układ</span>
+        <span>Mapa 10 × 10 • Jeden ruch na turę</span>
+        <span class="footer-tip">Wybierz zwiadowcę, a potem podświetlone pole</span>
       </footer>
     </main>
 

@@ -4,13 +4,18 @@ Przeglądarkowy prototyp rodzinnej strategii turowej inspirowanej klasycznymi gr
 
 ## Aktualny stan
 
-Etap 1 zawiera:
+Etap 2 zawiera:
 
 - responsywną mapę izometryczną 10 × 10 pól;
 - cztery rodzaje terenu: równiny, lasy, góry i wodę;
 - losowe generowanie kolejnych map;
 - wybieranie pól myszą lub dotykiem;
-- panel z rodzajem terenu i współrzędnymi pola.
+- panel z rodzajem terenu i współrzędnymi pola;
+- zwiadowcę poruszającego się o jedno pole;
+- podświetlenie dostępnych pól ruchu;
+- blokadę ruchu przez wodę;
+- jeden ruch jednostki na turę;
+- zakończenie tury i licznik tur.
 
 ## Uruchomienie
 
@@ -33,4 +38,5 @@ Projekt nie wymaga instalowania zależności ani kompilacji.
 - `index.html` — struktura ekranu gry;
 - `style.css` — responsywny wygląd;
 - `src/map.js` — rodzaje terenu i generator mapy;
-- `src/game.js` — rysowanie mapy oraz obsługa wyboru pól.
+- `src/units.js` — jednostki i reguły ruchu;
+- `src/game.js` — stan tury, rysowanie oraz sterowanie.
